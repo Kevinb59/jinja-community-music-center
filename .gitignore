@@ -1,0 +1,28 @@
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Fichiers temporaires
+*.tmp
+*.log
+*.cache
+
+# Dossier administratif (ne pas versionner)
+images/administratif asso jinja/
+
+# Images (optionnel - décommentez si vous ne voulez pas versionner les images)
+# images/*
+# !images/.gitkeep
+
+# Fichiers de configuration sensibles (optionnel)
+# Décommentez si vous ne voulez pas versionner votre config GAS
+# js/config.js
+

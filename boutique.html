@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Boutique — Projet Jinja Community Music Center - France</title>
+    <meta
+      name="description"
+      content="Achetez les créations des enfants du Jinja Community Music Center - France : dessous de verres et dessous de table en bois fabriqués lors de nos ateliers créatifs."
+    />
+
+    <!-- Feuille de style externe -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <header class="header">
+      <a class="brand" href="index.html" aria-label="Retour à l'accueil">
+        <img
+          class="brand__logo"
+          src="images/jinja copie.png"
+          alt="Logo Projet Jinja"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';"
+        />
+        <span class="brand__logo brand__logo--fallback" style="display: none"
+          >♪</span
+        >
+        <span class="brand__name" data-i18n="brand"
+          >PROJET JINJA COMMUNITY MUSIC CENTER - FRANCE</span
+        >
+      </a>
+
+      <button
+        class="header__menu-toggle"
+        type="button"
+        id="menuToggle"
+        aria-label="Menu"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav" id="mainNav">
+        <a href="index.html#projet" data-i18n="nav_project">Le projet</a>
+        <a href="index.html#besoins" data-i18n="nav_needs">Nos besoins</a>
+        <a href="index.html#aider" data-i18n="nav_help">Aider</a>
+        <a href="index.html#don" data-i18n="nav_donate">Donner</a>
+        <a href="boutique.html" data-i18n="nav_creations">Nos créations</a>
+        <a href="index.html#galerie" data-i18n="nav_gallery">Galerie</a>
+        <a href="index.html#contact" data-i18n="nav_contact">Contact</a>
+        <a href="index.html#donateurs" data-i18n="nav_donors">Nos donateurs</a>
+      </nav>
+
+      <div class="header__actions">
+        <button
+          class="lang"
+          id="langBtn"
+          type="button"
+          aria-label="Changer de langue"
+        >
+          FR
+        </button>
+        <a class="btn btn--primary" href="index.html#don" data-i18n="cta_donate"
+          >Faire un don</a
+        >
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- BOUTIQUE -->
+      <section class="section" id="boutique">
+        <div class="container">
+          <h1 data-i18n="shop_title">Boutique</h1>
+          <p class="muted lead" data-i18n="shop_intro">
+            Découvrez les créations uniques fabriquées par les enfants du centre
+            lors de nos ateliers créatifs. Chaque achat soutient directement le
+            centre et encourage les enfants dans leur apprentissage.
+          </p>
+
+          <!-- Grille des produits -->
+          <div class="shop-grid" id="shopGrid">
+            <!-- Les produits seront ajoutés ici dynamiquement -->
+            <div class="shop-item">
+              <div class="shop-item__image">
+                <div class="shop-item__placeholder">🪵</div>
+              </div>
+              <div class="shop-item__content">
+                <h3 data-i18n="shop_item_1_name">Dessous de verres</h3>
+                <p class="muted" data-i18n="shop_item_1_desc">
+                  Dessous de verres en bois fabriqués lors de nos ateliers
+                  créatifs avec les enfants.
+                </p>
+                <div class="shop-item__pricing">
+                  <div class="shop-item__price-info">
+                    <span
+                      class="shop-item__price-label"
+                      data-i18n="shop_price_unit"
+                      >Prix unitaire :</span
+                    >
+                    <span
+                      class="shop-item__price-unit"
+                      data-price="0"
+                      data-i18n="shop_item_1_price"
+                    >
+                      Prix sur demande
+                    </span>
+                  </div>
+                  <div class="shop-item__quantity">
+                    <label for="quantity-1" data-i18n="shop_quantity"
+                      >Quantité :</label
+                    >
+                    <input
+                      type="number"
+                      id="quantity-1"
+                      class="shop-item__quantity-input"
+                      min="1"
+                      value="1"
+                      data-product="dessous-verres"
+                    />
+                  </div>
+                  <div class="shop-item__total">
+                    <span class="shop-item__total-label" data-i18n="shop_total"
+                      >Total :</span
+                    >
+                    <span
+                      class="shop-item__total-price"
+                      data-i18n="shop_item_1_price"
+                    >
+                      Prix sur demande
+                    </span>
+                  </div>
+                </div>
+                <button
+                  class="btn btn--primary shop-item__btn"
+                  data-i18n="shop_item_btn"
+                  data-product="dessous-verres"
+                >
+                  Commander
+                </button>
+              </div>
+            </div>
+
+            <div class="shop-item">
+              <div class="shop-item__image">
+                <div class="shop-item__placeholder">🪵</div>
+              </div>
+              <div class="shop-item__content">
+                <h3 data-i18n="shop_item_2_name">Dessous de table</h3>
+                <p class="muted" data-i18n="shop_item_2_desc">
+                  Dessous de table en bois réalisés par les enfants lors des
+                  ateliers.
+                </p>
+                <div class="shop-item__pricing">
+                  <div class="shop-item__price-info">
+                    <span
+                      class="shop-item__price-label"
+                      data-i18n="shop_price_unit"
+                      >Prix unitaire :</span
+                    >
+                    <span
+                      class="shop-item__price-unit"
+                      data-price="0"
+                      data-i18n="shop_item_2_price"
+                    >
+                      Prix sur demande
+                    </span>
+                  </div>
+                  <div class="shop-item__quantity">
+                    <label for="quantity-2" data-i18n="shop_quantity"
+                      >Quantité :</label
+                    >
+                    <input
+                      type="number"
+                      id="quantity-2"
+                      class="shop-item__quantity-input"
+                      min="1"
+                      value="1"
+                      data-product="dessous-table"
+                    />
+                  </div>
+                  <div class="shop-item__total">
+                    <span class="shop-item__total-label" data-i18n="shop_total"
+                      >Total :</span
+                    >
+                    <span
+                      class="shop-item__total-price"
+                      data-i18n="shop_item_2_price"
+                    >
+                      Prix sur demande
+                    </span>
+                  </div>
+                </div>
+                <button
+                  class="btn btn--primary shop-item__btn"
+                  data-i18n="shop_item_btn"
+                  data-product="dessous-table"
+                >
+                  Commander
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <p class="muted">
+          © <span id="year"></span> <span data-i18n="brand">Projet Jinja</span>
+        </p>
+        <div class="footer__links">
+          <a href="index.html#top" data-i18n="footer_top">Haut de page</a>
+          <a href="index.html" data-i18n="footer_home">Accueil</a>
+          <a href="mentions-legales.html" data-i18n="footer_legal"
+            >Mentions légales</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts JavaScript externes -->
+    <script src="js/config.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/boutique.js"></script>
+  </body>
+</html>

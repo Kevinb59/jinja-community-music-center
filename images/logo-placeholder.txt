@@ -1,0 +1,11 @@
+# Placeholder pour le logo
+
+Remplacez ce fichier par votre logo (logo.png) dans ce dossier.
+
+Recommandations :
+- Format : PNG avec transparence ou SVG
+- Taille recommandée : 36x36px minimum (sera redimensionné par le CSS)
+- Le logo sera affiché dans un carré arrondi avec fond violet clair
+
+
+
