@@ -1,130 +1,49 @@
-# Jinja Community Music Center - France - Site Web
+# Jinja Community Music Center — France — Site web
 
-Site web pour le projet Jinja Community Music Center - France, un lieu culturel qui forme des musiciens à Jinja (Ouganda).
+Site du projet Jinja Community Music Center — France : lieu culturel qui forme des musiciens à Jinja (Ouganda).
 
-## 📁 Structure du projet
+## Structure du projet
 
 ```
 jinja-community-music-center/
-├── index.html          # Page principale HTML
-├── css/
-│   └── style.css      # Feuille de style principale
-├── js/
-│   ├── config.js      # Configuration Google Apps Script
-│   └── script.js      # Script JavaScript principal
-├── images/             # Dossier pour les photos et images
-│   └── .gitkeep       # Fichier pour versionner le dossier vide
-├── gas/
-│   └── mail-handler.gs # Script Google Apps Script pour l'envoi de mails
-└── README.md          # Ce fichier
+├── index.html              # Point d’entrée Vite (application React)
+├── src/                    # Code React (App, styles Tailwind, données galerie)
+├── public/                 # Fichiers servis tels quels (boutique, mentions légales, transparence, css/js legacy)
+├── images/                 # Photos (galerie, hero, etc.)
+├── gas/                    # Google Apps Script (formulaires)
+├── scripts/                # Génération JSON de la galerie
+├── vite.config.js
+├── tailwind.config.js
+└── package.json
 ```
 
-## 🚀 Installation
+## Développement
 
-1. Clonez ou téléchargez ce projet
-2. Ouvrez `index.html` dans votre navigateur pour tester localement
-3. Pour déployer, uploadez tous les fichiers sur votre serveur web
-
-## ⚙️ Configuration Google Apps Script (GAS)
-
-Le site utilise Google Apps Script pour l'envoi de mails depuis les formulaires de contact et de don matériel.
-
-### Étapes de configuration :
-
-1. **Créer le script GAS**
-
-   - Allez sur https://script.google.com
-   - Créez un nouveau projet
-   - Copiez le contenu de `gas/mail-handler.gs` dans l'éditeur
-   - Remplacez `RECIPIENT_EMAIL` par votre adresse email de destination
-
-2. **Déployer le script**
-
-   - Cliquez sur "Déployer" > "Nouvelle version"
-   - Type d'exécution : "Moi"
-   - Qui a accès : "Tout le monde" (nécessaire pour les requêtes depuis le web)
-   - Cliquez sur "Déployer"
-   - Copiez l'URL de déploiement (format : `https://script.google.com/macros/s/XXXXX/exec`)
-
-3. **Configurer le site**
-   - Ouvrez `js/config.js`
-   - Remplacez `XXXXX` par votre URL de déploiement GAS complète
-   - Remplacez `votre-email@example.com` par votre adresse email
-
-### Exemple de configuration :
-
-```javascript
-const GAS_CONFIG = {
-  contactUrl: 'https://script.google.com/macros/s/AKfycby.../exec',
-  materialUrl: 'https://script.google.com/macros/s/AKfycby.../exec',
-  recipientEmail: 'contact@jinja-music-center.org'
-}
+```bash
+npm install
+npm run dev
 ```
 
-## 🌐 Fonctionnalités
+L’application est sur `http://localhost:5173`. Les images du dépôt sont servies sous `/images/…` (voir `vite.config.js`).
 
-- **Internationalisation** : Support FR/EN avec basculement de langue
-- **Formulaires** : Contact et don matériel avec envoi via GAS
-- **Galerie** : Albums photos avec navigation par onglets
-- **Responsive** : Design adaptatif pour mobile et desktop
-- **Accessibilité** : Respect des standards ARIA
+## Build et déploiement
 
-## 📸 Gestion des images
-
-Le dossier `images/` est prévu pour stocker toutes les photos et images du site :
-
-- Photos de la galerie (albums : centre, concert, vie, don)
-- Images du hero
-- Logos et icônes
-- Autres ressources visuelles
-
-### Organisation recommandée :
-
-```
-images/
-├── gallery/
-│   ├── centre/
-│   ├── concert/
-│   ├── vie/
-│   └── don/
-├── hero/
-└── logos/
+```bash
+npm run gallery    # optionnel : régénérer la galerie depuis images/
+npm run build      # sortie dans dist/
 ```
 
-### Utilisation dans le code :
+Déployez le contenu de **`dist/`** sur votre hébergement statique. Le dossier **`public/`** est copié à la racine du build (ex. `/boutique.html`, `/js/…`).
 
-Pour référencer une image, utilisez le chemin relatif depuis `index.html` :
+## Galerie photos
 
-```html
-<img src="images/gallery/centre/photo-01.jpg" alt="Description" />
-```
+Les albums correspondent aux dossiers sous `images/` (concert, instrument-parc, vie-quotidienne, répétition, don). Voir **`scripts/README.md`** pour `generate-gallery.js` et `watch-gallery.js`.
 
-## 📝 Notes techniques
+## Configuration Google Apps Script
 
-- **CSS** : Tous les styles sont dans `css/style.css` (pas de CSS inline)
-- **JavaScript** : Toute la logique est dans `js/script.js` (pas de JS inline)
-- **GAS** : Utilisation de `mode: "no-cors"` pour contourner les restrictions CORS
-- **Images** : Toutes les images sont dans le dossier `images/`
+Les formulaires utilisent des URLs déployées (GAS). Pour l’app React, utilisez un fichier **`.env`** à la racine (voir **`.env.example`**) avec `VITE_GAS_CONTACT_URL`, etc.  
+Pour les pages dans **`public/`**, éditez **`public/js/config.js`** comme avant.
 
-## 🔧 Personnalisation
+## Note
 
-### Modifier les couleurs
-
-Éditez les variables CSS dans `css/style.css` :
-
-```css
-:root {
-  --bg: #0b0d12;
-  --accent: #7c5cff;
-  --accent2: #25d366;
-  /* ... */
-}
-```
-
-### Ajouter des traductions
-
-Modifiez l'objet `i18n` dans `js/script.js` pour ajouter de nouvelles langues ou modifier les textes.
-
-## 📧 Support
-
-Pour toute question ou problème, contactez via le formulaire du site.
+Si un dossier vide **`redesign-preview/`** apparaît encore après une migration, supprimez-le manuellement (Windows peut le verrouiller tant qu’un processus l’utilise).

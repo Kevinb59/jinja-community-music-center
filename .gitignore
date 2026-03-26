@@ -24,5 +24,9 @@ images/administratif asso jinja/
 
 # Fichiers de configuration sensibles (optionnel)
 # Décommentez si vous ne voulez pas versionner votre config GAS
-# js/config.js
+# public/js/config.js
+
+# Dépendances et build Vite (projet React à la racine)
+node_modules
+dist
 

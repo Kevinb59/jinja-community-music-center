@@ -141,7 +141,7 @@ const i18n = {
       "Les dons financiers sont transférés directement vers le compte de l'association. Nous utilisons des plateformes sécurisées pour les transferts internationaux vers l'Ouganda. Les fonds servent immédiatement au fonctionnement du centre, à l'achat d'instruments sur place, au loyer, aux charges et à la nourriture pour les enfants.",
     donate_info_mat_title: 'Dons matériels',
     donate_info_mat_text:
-      "Après réception de ton formulaire, nous te recontactons pour organiser l'envoi. Pour les instruments, accessoires, matériel d'entretien et pupitres, nous coordonnons l'expédition vers l'Ouganda (frais de transport à discuter selon le cas). Les dons matériels peuvent être regroupés pour optimiser les coûts d'expédition : nous attendons parfois plusieurs dons avant d'organiser un envoi groupé. Vous serez informé du planning d'expédition. Pour les partitions dématérialisées, nous t'enverrons un email avec les instructions pour le transfert des fichiers.",
+      "Après réception de ton formulaire, nous te recontactons pour organiser l'envoi. Pour les instruments, accessoires, matériel d'entretien et pupitres, nous coordonnons l'expédition vers l'Ouganda. Les dons matériels peuvent être regroupés pour optimiser les coûts d'expédition : nous attendons parfois plusieurs dons avant d'organiser un envoi groupé. Vous serez informé du planning d'expédition. Pour les partitions dématérialisées, nous t'enverrons un email avec les instructions pour le transfert des fichiers.",
     instruments_modal_title: 'Liste des instruments',
     instruments_modal_text:
       "Voici la liste des instruments recherchés pour compléter l'orchestre :",
@@ -365,7 +365,7 @@ const i18n = {
       "Financial donations are transferred directly to the association's account. We use secure platforms for international transfers to Uganda. Funds are immediately used for the center's operations, purchasing instruments locally, rent, utilities, and food for children.",
     donate_info_mat_title: 'Material donations',
     donate_info_mat_text:
-      'After receiving your form, we will contact you to organize the shipment. For instruments, accessories, maintenance equipment, and music stands, we coordinate shipping to Uganda (shipping costs to be discussed case by case). Material donations may be grouped to optimize shipping costs: we sometimes wait for several donations before organizing a group shipment. You will be informed of the shipping schedule. For digital sheet music, we will send you an email with instructions for file transfer.',
+      'After receiving your form, we will contact you to organize the shipment. For instruments, accessories, maintenance equipment, and music stands, we coordinate shipping to Uganda. Material donations may be grouped to optimize shipping costs: we sometimes wait for several donations before organizing a group shipment. You will be informed of the shipping schedule. For digital sheet music, we will send you an email with instructions for file transfer.',
     instruments_modal_title: 'Instrument list',
     instruments_modal_text:
       'Here is the list of instruments we are looking for to complete the orchestra:',

@@ -12,9 +12,12 @@
  * gallery-data.json à chaque modification dans les dossiers d'images.
  */
 
-const fs = require('fs')
-const path = require('path')
-const { generateGalleryData } = require('./generate-gallery.js')
+import fs from 'node:fs'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
+import { generateGalleryData } from './generate-gallery.js'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Dossier source des images
 const IMAGES_DIR = path.join(__dirname, '..', 'images')

@@ -9,8 +9,12 @@
  * Usage: node scripts/generate-gallery.js
  */
 
-const fs = require('fs')
-const path = require('path')
+import fs from 'node:fs'
+import path from 'node:path'
+import process from 'node:process'
+import { fileURLToPath, pathToFileURL } from 'node:url'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 // Configuration des albums
 // Mapping entre les noms de dossiers et les IDs d'albums dans le HTML
@@ -24,8 +28,16 @@ const ALBUM_MAPPING = {
 
 // Dossier source des images
 const IMAGES_DIR = path.join(__dirname, '..', 'images')
-// Fichier de sortie JSON
-const OUTPUT_FILE = path.join(__dirname, '..', 'js', 'gallery-data.json')
+// Fichier de sortie JSON (consommé par l’app React dans src/)
+const OUTPUT_FILE = path.join(__dirname, '..', 'src', 'data', 'gallery-data.json')
+// Copie pour les pages dans `public/` qui chargent encore `js/script.js` (fetch relatif `js/gallery-data.json`).
+const PUBLIC_GALLERY_COPY = path.join(
+  __dirname,
+  '..',
+  'public',
+  'js',
+  'gallery-data.json'
+)
 
 /**
  * Fonction pour scanner un dossier et récupérer tous les fichiers images
@@ -88,10 +100,14 @@ function generateGalleryData() {
     }
   }
 
-  // Écrire le fichier JSON
+  // Écrire le fichier JSON (React + copie public pour le JS legacy des pages statiques)
+  const payload = JSON.stringify(galleryData, null, 2)
   try {
-    fs.writeFileSync(OUTPUT_FILE, JSON.stringify(galleryData, null, 2), 'utf8')
+    fs.writeFileSync(OUTPUT_FILE, payload, 'utf8')
+    fs.mkdirSync(path.dirname(PUBLIC_GALLERY_COPY), { recursive: true })
+    fs.writeFileSync(PUBLIC_GALLERY_COPY, payload, 'utf8')
     console.log(`\n✅ Fichier généré: ${OUTPUT_FILE}`)
+    console.log(`✅ Copie public: ${PUBLIC_GALLERY_COPY}`)
     console.log(
       `📊 Total d'images: ${Object.values(galleryData).reduce(
         (sum, arr) => sum + arr.length,
@@ -121,9 +137,12 @@ function getAltText(albumId, filename) {
   return altTexts[albumId] || 'Photo'
 }
 
-// Exécuter le script
-if (require.main === module) {
+// Exécuter le script uniquement en lancement direct (pas lors d’un import)
+const isMain =
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
+if (isMain) {
   generateGalleryData()
 }
 
-module.exports = { generateGalleryData }
+export { generateGalleryData }

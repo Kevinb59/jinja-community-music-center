@@ -67,20 +67,22 @@ Le système scanne automatiquement ces dossiers :
 # Terminal 1 : Lancer la surveillance automatique
 node scripts/watch-gallery.js
 
-# Terminal 2 : Lancer votre serveur local (si nécessaire)
+# Terminal 2 : Application React (Vite)
+npm run dev
 # Puis ajoutez simplement des images dans les dossiers !
 ```
 
 **Pour la production :**
 
 ```bash
-# Générer une fois avant le déploiement
+# Générer une fois avant le déploiement (ou : npm run gallery)
 node scripts/generate-gallery.js
+npm run build
 ```
 
 ## 📝 Format du fichier généré
 
-Le script génère `js/gallery-data.json` avec cette structure :
+Le script écrit **`src/data/gallery-data.json`** (application React) et une copie **`public/js/gallery-data.json`** pour les pages statiques qui chargent encore `js/script.js`. Structure :
 
 ```json
 {
