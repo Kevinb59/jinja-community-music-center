@@ -1,7 +1,7 @@
 /**
  * Page refonte Jinja Community Music Center — contenu aligné sur index.html + script.js (FR).
  * Images : préfixe /images/ (dossier `images/` à la racine ; copié dans dist au build, servi en dev par vite.config.js).
- * Pages boutique / transparence : fichiers dans `public/` (URL racine, ex. /boutique.html).
+ * Page boutique : fichier dans `public/` (URL racine, ex. /boutique.html).
  */
 import React, { useEffect, useId, useMemo, useState } from 'react'
 import {
@@ -1470,18 +1470,8 @@ export default function App() {
         title={copy.transparencyBtn}
         wide
       >
-        {/* HTML statique aligné sur transparence.html ; lien garde l’accès page classique / impression. */}
+        {/* Contenu transparence directement intégré dans la modale. */}
         <div dangerouslySetInnerHTML={{ __html: transparencyModalBodyHtml }} />
-        <p className="mt-6 border-t border-white/10 pt-4 text-center">
-          <a
-            href={legacyPage('transparence.html')}
-            target="_blank"
-            rel="noreferrer"
-            className="text-sm font-medium text-violet-300 underline decoration-violet-400/50 hover:text-violet-200"
-          >
-            {copy.transparencyPageLinkLabel}
-          </a>
-        </p>
       </ModalPanel>
 
       <ModalPanel

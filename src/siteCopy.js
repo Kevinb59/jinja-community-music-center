@@ -94,8 +94,6 @@ export const copy = {
   donateLead:
     "Deux façons d'aider : un don financier (le plus rapide) ou un don matériel (instruments, partitions, accessoires, matériel d'entretien, pupitres).",
   transparencyBtn: 'Transparence & utilisation des dons',
-  /** Lien vers transparence.html pour impression / partage direct. */
-  transparencyPageLinkLabel: 'Ouvrir la page dédiée (nouvel onglet)',
   donateFinTitle: 'Don financier',
   donateFinText:
     "Pour soutenir immédiatement le fonctionnement du lieu et l'achat d'instruments.",
@@ -163,7 +161,7 @@ export const copy = {
 }
 
 /**
- * Corps HTML de la modale « Transparence » (contenu aligné sur transparence.html, thème sombre Tailwind).
+ * Corps HTML de la modale « Transparence » (contenu autonome, thème sombre Tailwind).
  */
 export const transparencyModalBodyHtml = `
 <div class="space-y-5 text-sm leading-7 text-slate-300">
