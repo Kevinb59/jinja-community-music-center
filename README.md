@@ -33,7 +33,7 @@ npm run gallery    # optionnel : régénérer la galerie depuis images/
 npm run build      # sortie dans dist/
 ```
 
-Déployez le contenu de **`dist/`** sur votre hébergement statique. Le dossier **`public/`** est copié à la racine du build (ex. `/boutique.html`, `/js/…`).
+Déployez le contenu de **`dist/`** sur votre hébergement statique. Le dossier **`public/`** est copié à la racine du build (ex. `/boutique.html`, `/js/…`). Le dossier **`images/`** à la racine du dépôt est recopié dans **`dist/images/`** au build (voir `vite.config.js`) pour que la galerie et les chemins `images/…` fonctionnent en production (ex. Vercel).
 
 ## Galerie photos
 
@@ -41,8 +41,8 @@ Les albums correspondent aux dossiers sous `images/` (concert, instrument-parc, 
 
 ## Configuration Google Apps Script
 
-Les formulaires utilisent des URLs déployées (GAS). Pour l’app React, utilisez un fichier **`.env`** à la racine (voir **`.env.example`**) avec `VITE_GAS_CONTACT_URL`, etc.  
-Pour les pages dans **`public/`**, éditez **`public/js/config.js`** comme avant.
+Les formulaires utilisent des URLs déployées (GAS). Pour l’app React, définissez **`GAS_URL_CONTACT`** (et optionnellement **`GAS_URL_MATERIAL`**) dans un **`.env`** local ou dans le tableau de bord Vercel au moment du build (voir **`.env.example`**). Les variables **`VITE_GAS_*`** restent acceptées en secours.  
+Pour les pages dans **`public/`**, éditez **`public/js/config.js`** comme avant (fichiers non passés par Vite).
 
 ## Note
 

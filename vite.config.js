@@ -1,10 +1,27 @@
+import { cpSync, existsSync } from 'node:fs'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+/**
+ * Expose GAS_URL_* au client au build (comme sur Vercel : variables sans préfixe VITE_).
+ * loadEnv charge .env, .env.local et les variables d’environnement du process (CI / Vercel).
+ */
+function gasEnvDefine(mode) {
+  const env = loadEnv(mode, process.cwd(), '')
+  const contact =
+    env.GAS_URL_CONTACT || env.VITE_GAS_CONTACT_URL || ''
+  const material =
+    env.GAS_URL_MATERIAL || env.VITE_GAS_MATERIAL_URL || ''
+  return {
+    'import.meta.env.GAS_URL_CONTACT': JSON.stringify(contact),
+    'import.meta.env.GAS_URL_MATERIAL': JSON.stringify(material)
+  }
+}
 // Racine du dépôt : le projet Vite vit à la racine ; `images/` reste à côté de ce fichier.
 const repoRoot = __dirname
 
@@ -62,6 +79,25 @@ function legacyDevAssets() {
   }
 }
 
-export default defineConfig({
-  plugins: [react(), legacyDevAssets()]
-})
+/**
+ * Production (Vercel, etc.) : Vite ne met dans dist/ que public/ + le bundle.
+ * Ce plugin recopie le dossier `images/` à la racine du dépôt vers `dist/images/`
+ * pour que les URLs `/images/...` (galerie, siteCopy) fonctionnent après build.
+ */
+function copySiteImagesToDist() {
+  return {
+    name: 'copy-site-images-to-dist',
+    apply: 'build',
+    closeBundle() {
+      const src = path.join(repoRoot, 'images')
+      const dest = path.join(repoRoot, 'dist', 'images')
+      if (!existsSync(src)) return
+      cpSync(src, dest, { recursive: true })
+    }
+  }
+}
+
+export default defineConfig(({ mode }) => ({
+  define: gasEnvDefine(mode),
+  plugins: [react(), legacyDevAssets(), copySiteImagesToDist()]
+}))

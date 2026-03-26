@@ -1,6 +1,6 @@
 /**
  * Page refonte Jinja Community Music Center — contenu aligné sur index.html + script.js (FR).
- * Images : préfixe /images/ (dossier racine du dépôt, servi en dev par vite.config.js).
+ * Images : préfixe /images/ (dossier `images/` à la racine ; copié dans dist au build, servi en dev par vite.config.js).
  * Pages boutique / transparence : fichiers dans `public/` (URL racine, ex. /boutique.html).
  */
 import React, { useEffect, useId, useMemo, useState } from 'react'
