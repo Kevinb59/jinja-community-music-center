@@ -37,7 +37,7 @@ Déployez le contenu de **`dist/`** sur votre hébergement statique. Le dossier 
 
 ## Galerie photos
 
-Les albums correspondent aux dossiers sous `images/` (concert, instrument-parc, vie-quotidienne, répétition, don). Voir **`scripts/README.md`** pour `generate-gallery.js` et `watch-gallery.js`.
+Les albums correspondent aux dossiers sous `images/` (concert, instrument-parc, vie-quotidienne, répétition, **dons** → onglet « Don »). Voir **`scripts/README.md`** pour `generate-gallery.js` et `watch-gallery.js`.
 
 ## Configuration Google Apps Script
 

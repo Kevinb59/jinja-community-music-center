@@ -57,7 +57,7 @@ Le système scanne automatiquement ces dossiers :
 - `images/instrument-parc/` → Album "Parc instrumental"
 - `images/vie-quotidienne/` → Album "Vie"
 - `images/repetition/` → Album "Répétition"
-- `images/don/` → Album "Don" (si le dossier existe)
+- `images/dons/` → Album « Don » dans la galerie (clé JSON : `don`)
 
 ## 🎯 Workflow recommandé
 

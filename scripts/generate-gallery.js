@@ -23,7 +23,8 @@ const ALBUM_MAPPING = {
   'instrument-parc': 'centre',
   'vie-quotidienne': 'vie',
   repetition: 'repetition',
-  don: 'don' // Si le dossier existe
+  // Dossier disque « dons » → onglet galerie « Don » (clé JSON / React : don)
+  dons: 'don'
 }
 
 // Dossier source des images

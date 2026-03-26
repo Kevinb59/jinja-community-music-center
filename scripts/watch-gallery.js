@@ -28,7 +28,7 @@ const ALBUM_FOLDERS = [
   'instrument-parc',
   'vie-quotidienne',
   'repetition',
-  'don'
+  'dons'
 ]
 
 console.log("👀 Surveillance des dossiers d'images activée...\n")
