@@ -1397,7 +1397,6 @@ export default function App() {
               </span>
             ) : null}
           </div>
-          <p className="md:col-span-2 text-sm text-amber-200/90">{copy.matNote}</p>
         </form>
       </ModalPanel>
 
@@ -1452,7 +1451,6 @@ export default function App() {
               </span>
             ) : null}
           </div>
-          <p className="md:col-span-2 text-sm text-amber-200/90">{copy.contactNote}</p>
         </form>
       </ModalPanel>
 

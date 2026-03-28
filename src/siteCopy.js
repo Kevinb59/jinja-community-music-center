@@ -114,8 +114,6 @@ export const copy = {
     'Remplis ce formulaire pour proposer un instrument ou des partitions. Nous te recontactons via le site.',
   matDigitalNote:
     "Pour les dons de partitions dématérialisées (fichiers PDF, liens légaux), nous t'enverrons un email après réception de ton formulaire pour organiser l'envoi.",
-  matNote:
-    "Pour le moment, ce formulaire envoie vers une URL Google Apps Script (à configurer dans .env : GAS_URL_MATERIAL).",
   creationsEyebrow: 'Nos créations',
   creationsTitle: 'Nos créations',
   creationsText:
@@ -136,8 +134,6 @@ export const copy = {
   contactRole: "Présidente de l'association — Personne contact principale",
   contactDesc:
     "C'est cette personne qui répond à vos messages et questions via le formulaire de contact.",
-  contactNote:
-    "Le formulaire utilise la même logique que le site d'origine (Google Apps Script — configurez GAS_URL_CONTACT).",
   contactFormOpenBtn: 'Ouvrir le formulaire de contact',
   formSend: 'Envoyer',
   matSend: 'Envoyer la proposition',
