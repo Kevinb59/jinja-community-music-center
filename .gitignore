@@ -22,6 +22,9 @@ images/administratif asso jinja/
 # images/*
 # !images/.gitkeep
 
+# Script Google Apps Script (copie locale uniquement ; déployer depuis script.google.com)
+gas/mail-handler.gs
+
 # Fichiers de configuration sensibles (optionnel)
 # Décommentez si vous ne voulez pas versionner votre config GAS
 # public/js/config.js

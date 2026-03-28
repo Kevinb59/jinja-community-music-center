@@ -1308,7 +1308,7 @@ export default function App() {
       >
         <p className="mb-3 text-sm leading-7 text-slate-300">{copy.matIntro}</p>
         <p className="mb-5 text-sm text-slate-400">{copy.matDigitalNote}</p>
-        {/* Grille 2 colonnes md : mêmes champs / envoi GAS que l’ancienne section #materiel. */}
+        {/* Don matériel : champs texte pour objet / instrument (GAS : item, instrument) ; état inclut Neuf/ve. */}
         <form className="grid gap-4 md:grid-cols-2" onSubmit={onMaterialSubmit}>
           <label className={labelClass}>
             Nom
@@ -1327,29 +1327,20 @@ export default function App() {
 
           <label className={labelClass}>
             Objet du don
-            <select className={inputClass} name="item" required defaultValue="">
-              <option value="" disabled>
-                Choisir…
-              </option>
-              <option value="materiel_entretien">Matériel d&apos;entretien</option>
-              <option value="pupitres">Pupitres</option>
-              <option value="accessoires">Accessoires</option>
-              <option value="partitions">Partitions</option>
-              <option value="instruments">Instruments</option>
-            </select>
+            <input
+              className={inputClass}
+              name="item"
+              required
+              placeholder="Ex : instruments, partitions, pupitres, accessoires…"
+            />
           </label>
           <label className={labelClass}>
             Instrument (si concerné)
-            <select className={inputClass} name="instrument" defaultValue="">
-              <option value="">Choisir…</option>
-              <option value="trombone">Trombone</option>
-              <option value="tuba">Tuba</option>
-              <option value="euphonium">Euphonium</option>
-              <option value="baryton">Baryton</option>
-              <option value="tenor_horn">Ténor horn</option>
-              <option value="trompette">Trompette</option>
-              <option value="cornet">Cornet</option>
-            </select>
+            <input
+              className={inputClass}
+              name="instrument"
+              placeholder="Ex : trombone, tuba, trompette…"
+            />
           </label>
 
           <label className={labelClass}>
@@ -1371,6 +1362,7 @@ export default function App() {
               <option value="" disabled>
                 Choisir…
               </option>
+              <option value="neuf_ve">Neuf/ve</option>
               <option value="excellent">Excellent</option>
               <option value="tres_bon">Très bon</option>
               <option value="bon">Bon</option>
