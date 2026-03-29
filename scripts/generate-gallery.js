@@ -24,7 +24,9 @@ const ALBUM_MAPPING = {
   'vie-quotidienne': 'vie',
   repetition: 'repetition',
   // Dossier disque « dons » → onglet galerie « Don » (clé JSON / React : don)
-  dons: 'don'
+  dons: 'don',
+  // Dossier ASCII « creations » (sans accent) → onglet « Créations »
+  creations: 'creations'
 }
 
 // Dossier source des images
@@ -40,12 +42,15 @@ const PUBLIC_GALLERY_COPY = path.join(
   'gallery-data.json'
 )
 
+const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
+const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogg']
+
 /**
- * Fonction pour scanner un dossier et récupérer tous les fichiers images
+ * Scan d’un dossier : images + vidéos (MP4/WebM/Ogg), tri par nom.
  * @param {string} dirPath - Chemin du dossier à scanner
- * @returns {Array<string>} - Liste des noms de fichiers images
+ * @returns {Array<{ file: string, type: 'image' | 'video' }>}
  */
-function getImageFiles(dirPath) {
+function getMediaFiles(dirPath) {
   try {
     if (!fs.existsSync(dirPath)) {
       console.log(`⚠️  Dossier non trouvé: ${dirPath}`)
@@ -53,18 +58,20 @@ function getImageFiles(dirPath) {
     }
 
     const files = fs.readdirSync(dirPath)
-    // Filtrer uniquement les fichiers images
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
-    const imageFiles = files.filter((file) => {
+    const media = []
+    for (const file of files) {
+      const full = path.join(dirPath, file)
+      if (!fs.statSync(full).isFile()) continue
       const ext = path.extname(file).toLowerCase()
-      return (
-        imageExtensions.includes(ext) &&
-        fs.statSync(path.join(dirPath, file)).isFile()
-      )
-    })
-
-    // Trier les fichiers par nom
-    return imageFiles.sort()
+      if (IMAGE_EXTENSIONS.includes(ext)) {
+        media.push({ file, type: 'image' })
+      } else if (VIDEO_EXTENSIONS.includes(ext)) {
+        media.push({ file, type: 'video' })
+      }
+    }
+    return media.sort((a, b) =>
+      a.file.localeCompare(b.file, undefined, { sensitivity: 'base' })
+    )
   } catch (error) {
     console.error(
       `❌ Erreur lors de la lecture du dossier ${dirPath}:`,
@@ -82,21 +89,29 @@ function generateGalleryData() {
 
   const galleryData = {}
 
-  // Scanner chaque dossier d'album
+  // Scanner chaque dossier d'album (images + vidéos)
   for (const [folderName, albumId] of Object.entries(ALBUM_MAPPING)) {
     const folderPath = path.join(IMAGES_DIR, folderName)
-    const images = getImageFiles(folderPath)
+    const mediaList = getMediaFiles(folderPath)
 
-    if (images.length > 0) {
+    if (mediaList.length > 0) {
       // Construire les chemins relatifs depuis la racine du site
-      galleryData[albumId] = images.map((image) => ({
-        src: `images/${folderName}/${image}`,
-        alt: getAltText(albumId, image)
-      }))
+      galleryData[albumId] = mediaList.map(({ file, type }) => {
+        const entry = {
+          src: `images/${folderName}/${file}`,
+          alt: getAltText(albumId, file, type)
+        }
+        if (type === 'video') entry.type = 'video'
+        return entry
+      })
 
-      console.log(`✅ ${folderName} → ${albumId}: ${images.length} image(s)`)
+      const imgCount = mediaList.filter((m) => m.type === 'image').length
+      const vidCount = mediaList.filter((m) => m.type === 'video').length
+      console.log(
+        `✅ ${folderName} → ${albumId}: ${imgCount} image(s), ${vidCount} vidéo(s)`
+      )
     } else {
-      console.log(`⚠️  ${folderName} → ${albumId}: Aucune image trouvée`)
+      console.log(`⚠️  ${folderName} → ${albumId}: Aucun média trouvé`)
       galleryData[albumId] = []
     }
   }
@@ -110,7 +125,7 @@ function generateGalleryData() {
     console.log(`\n✅ Fichier généré: ${OUTPUT_FILE}`)
     console.log(`✅ Copie public: ${PUBLIC_GALLERY_COPY}`)
     console.log(
-      `📊 Total d'images: ${Object.values(galleryData).reduce(
+      `📊 Total de médias: ${Object.values(galleryData).reduce(
         (sum, arr) => sum + arr.length,
         0
       )}`
@@ -122,20 +137,23 @@ function generateGalleryData() {
 }
 
 /**
- * Génère un texte alternatif basé sur l'album et le nom du fichier
+ * Texte alternatif selon l’album, le fichier et le type (image / vidéo).
  * @param {string} albumId - ID de l'album
  * @param {string} filename - Nom du fichier
- * @returns {string} - Texte alternatif
+ * @param {'image'|'video'} mediaType - Type de média
  */
-function getAltText(albumId, filename) {
+function getAltText(albumId, filename, mediaType = 'image') {
   const altTexts = {
     concert: 'Concert',
     centre: 'Parc instrumental',
     vie: 'Vie quotidienne',
     repetition: 'Répétition',
-    don: 'Don'
+    don: 'Don',
+    creations: 'Créations'
   }
-  return altTexts[albumId] || 'Photo'
+  const base = altTexts[albumId] || 'Photo'
+  if (mediaType === 'video') return `${base} — vidéo`
+  return base
 }
 
 // Exécuter le script uniquement en lancement direct (pas lors d’un import)

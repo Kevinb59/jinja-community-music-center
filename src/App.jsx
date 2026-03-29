@@ -17,6 +17,7 @@ import {
   Menu,
   Music2,
   Package,
+  Play,
   Shield,
   ShoppingBag,
   X
@@ -63,6 +64,7 @@ const GALLERY_TABS = [
   { key: 'centre', label: 'Parc instrumental' },
   { key: 'vie', label: 'Vie' },
   { key: 'repetition', label: 'Répétition' },
+  { key: 'creations', label: 'Créations' },
   { key: 'don', label: 'Don' }
 ]
 
@@ -286,11 +288,12 @@ function SiteImage({ src, alt, tall = false, preserveAspect = false, className =
 }
 
 /**
- * Vignette galerie : cadre carré (aspect-square), image en couverture ; clic → agrandissement.
- * Variables : failed (image absente), onPick (ouvre le lightbox avec src/alt).
+ * Vignette galerie : image ou vidéo (aperçu muet + icône lecture) ; clic → lightbox.
+ * type : 'video' → balise video en miniature ; sinon img. failed : média illisible.
  */
-function GalleryThumb({ src, alt, onPick }) {
+function GalleryThumb({ src, alt, type = 'image', onPick }) {
   const [failed, setFailed] = useState(false)
+  const isVideo = type === 'video'
   if (!src || failed) {
     return (
       <div
@@ -306,26 +309,48 @@ function GalleryThumb({ src, alt, onPick }) {
     <button
       type="button"
       onClick={onPick}
-      className="group aspect-square w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50 text-left transition hover:border-emerald-400/35 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+      className="group relative aspect-square w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50 text-left transition hover:border-emerald-400/35 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
     >
-      <img
-        src={assetUrl(src)}
-        alt={alt || 'Galerie'}
-        className="h-full w-full object-cover transition group-hover:opacity-90"
-        loading="lazy"
-        onError={() => setFailed(true)}
-      />
+      {isVideo ? (
+        <>
+          <video
+            src={assetUrl(src)}
+            muted
+            playsInline
+            preload="metadata"
+            className="h-full w-full object-cover transition group-hover:opacity-90"
+            aria-hidden
+            onError={() => setFailed(true)}
+          />
+          <span
+            className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/25 transition group-hover:bg-black/35"
+            aria-hidden
+          >
+            <Play className="h-10 w-10 text-white drop-shadow-md" strokeWidth={1.5} />
+          </span>
+          <span className="sr-only">{alt || 'Vidéo'}</span>
+        </>
+      ) : (
+        <img
+          src={assetUrl(src)}
+          alt={alt || 'Galerie'}
+          className="h-full w-full object-cover transition group-hover:opacity-90"
+          loading="lazy"
+          onError={() => setFailed(true)}
+        />
+      )}
     </button>
   )
 }
 
 /**
- * Lightbox galerie : navigation au swipe (tactile) et flèches clavier ; tap / clic simple ferme.
- * Variables : touchStartRef (coords départ), skipClickRef (évite double action après swipe).
+ * Lightbox galerie : image ou vidéo avec contrôles ; swipe / flèches ; clic fond ferme (pas sur la vidéo).
+ * videoRef : pause au changement d’index ou à la fermeture pour éviter lecture en arrière-plan.
  */
 function GalleryLightbox({ open, images, index, onClose, onNavigate }) {
   const touchStartRef = useRef(null)
   const skipClickRef = useRef(false)
+  const videoRef = useRef(null)
   const SWIPE_MIN = 50
 
   const total = images.length
@@ -348,10 +373,17 @@ function GalleryLightbox({ open, images, index, onClose, onNavigate }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [open, safeIndex, total, onNavigate])
 
+  // Pause la vidéo quand on change de média ou qu’on ferme le lightbox
+  useEffect(() => {
+    videoRef.current?.pause?.()
+  }, [safeIndex, open])
+
   if (!open || !current || total === 0) return null
 
   const src = current.src
   const alt = current.alt || 'Galerie'
+  const isVideo =
+    current.type === 'video' || /\.(mp4|webm|ogg)$/i.test(String(current.src || ''))
 
   function onTouchStart(e) {
     const t = e.touches[0]
@@ -387,16 +419,33 @@ function GalleryLightbox({ open, images, index, onClose, onNavigate }) {
       className="fixed inset-0 z-[100] flex cursor-zoom-out touch-manipulation flex-col items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
-      aria-label={`Photo ${safeIndex + 1} sur ${total}`}
+      aria-label={`Média ${safeIndex + 1} sur ${total}`}
       onClick={handleOverlayClick}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <img
-        src={assetUrl(src)}
-        alt={alt}
-        className="pointer-events-none max-h-[min(90dvh,100%)] max-w-[min(95dvw,100%)] object-contain shadow-2xl"
-      />
+      {isVideo ? (
+        <div
+          className="pointer-events-auto max-h-[min(90dvh,100%)] max-w-[min(95dvw,100%)] shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <video
+            ref={videoRef}
+            src={assetUrl(src)}
+            controls
+            playsInline
+            className="max-h-[min(90dvh,100%)] max-w-[min(95dvw,100%)] object-contain"
+          >
+            {alt}
+          </video>
+        </div>
+      ) : (
+        <img
+          src={assetUrl(src)}
+          alt={alt}
+          className="pointer-events-none max-h-[min(90dvh,100%)] max-w-[min(95dvw,100%)] object-contain shadow-2xl"
+        />
+      )}
       {total > 1 ? (
         <p className="pointer-events-none mt-4 text-sm text-white/60" aria-hidden="true">
           {safeIndex + 1} / {total}
@@ -1362,7 +1411,7 @@ export default function App() {
                 ))}
               </div>
               {galleryImages.length === 0 ? (
-                <p className="mt-6 px-2 text-sm text-slate-500">Aucune image dans cet album pour le moment.</p>
+                <p className="mt-6 px-2 text-sm text-slate-500">Aucun média dans cet album pour le moment.</p>
               ) : (
                 <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                   {galleryImages.map((img, idx) => (
@@ -1370,6 +1419,7 @@ export default function App() {
                       key={`${img.src}-${idx}`}
                       src={img.src}
                       alt={img.alt || 'Galerie'}
+                      type={img.type === 'video' ? 'video' : 'image'}
                       onPick={() => setGalleryLightboxIndex(idx)}
                     />
                   ))}

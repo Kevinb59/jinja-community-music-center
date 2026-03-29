@@ -75,15 +75,11 @@
       "alt": "Parc instrumental"
     },
     {
-      "src": "images/instrument-parc/IMG-20251205-WA0035(1).jpg",
-      "alt": "Parc instrumental"
-    },
-    {
       "src": "images/instrument-parc/IMG-20251205-WA0035.jpg",
       "alt": "Parc instrumental"
     },
     {
-      "src": "images/instrument-parc/IMG-20251205-WA0036(1).jpg",
+      "src": "images/instrument-parc/IMG-20251205-WA0035(1).jpg",
       "alt": "Parc instrumental"
     },
     {
@@ -91,11 +87,15 @@
       "alt": "Parc instrumental"
     },
     {
-      "src": "images/instrument-parc/IMG-20251205-WA0040(1).jpg",
+      "src": "images/instrument-parc/IMG-20251205-WA0036(1).jpg",
       "alt": "Parc instrumental"
     },
     {
       "src": "images/instrument-parc/IMG-20251205-WA0040.jpg",
+      "alt": "Parc instrumental"
+    },
+    {
+      "src": "images/instrument-parc/IMG-20251205-WA0040(1).jpg",
       "alt": "Parc instrumental"
     },
     {
@@ -112,6 +112,22 @@
     }
   ],
   "vie": [
+    {
+      "src": "images/vie-quotidienne/cartefinale.jpg",
+      "alt": "Vie quotidienne"
+    },
+    {
+      "src": "images/vie-quotidienne/cartefinale2.jpg",
+      "alt": "Vie quotidienne"
+    },
+    {
+      "src": "images/vie-quotidienne/cartefinale3.jpg",
+      "alt": "Vie quotidienne"
+    },
+    {
+      "src": "images/vie-quotidienne/contexte.jpg",
+      "alt": "Vie quotidienne"
+    },
     {
       "src": "images/vie-quotidienne/IMG-20251203-WA0008.jpg",
       "alt": "Vie quotidienne"
@@ -181,27 +197,19 @@
       "alt": "Vie quotidienne"
     },
     {
-      "src": "images/vie-quotidienne/cartefinale.jpg",
-      "alt": "Vie quotidienne"
-    },
-    {
-      "src": "images/vie-quotidienne/cartefinale2.jpg",
-      "alt": "Vie quotidienne"
-    },
-    {
-      "src": "images/vie-quotidienne/cartefinale3.jpg",
-      "alt": "Vie quotidienne"
-    },
-    {
-      "src": "images/vie-quotidienne/contexte.jpg",
-      "alt": "Vie quotidienne"
-    },
-    {
       "src": "images/vie-quotidienne/qui2.jpg",
       "alt": "Vie quotidienne"
     }
   ],
   "repetition": [
+    {
+      "src": "images/repetition/avenir.jpg",
+      "alt": "Répétition"
+    },
+    {
+      "src": "images/repetition/brass1.jpg",
+      "alt": "Répétition"
+    },
     {
       "src": "images/repetition/IMG-20251203-WA0049.jpg",
       "alt": "Répétition"
@@ -212,14 +220,6 @@
     },
     {
       "src": "images/repetition/IMG-20251229-WA0043.jpg",
-      "alt": "Répétition"
-    },
-    {
-      "src": "images/repetition/avenir.jpg",
-      "alt": "Répétition"
-    },
-    {
-      "src": "images/repetition/brass1.jpg",
       "alt": "Répétition"
     }
   ],
@@ -247,6 +247,53 @@
     {
       "src": "images/dons/IMG-20260223-WA0027.jpg",
       "alt": "Don"
+    }
+  ],
+  "creations": [
+    {
+      "src": "images/creations/IMG-20260201-WA0006.jpg",
+      "alt": "Créations"
+    },
+    {
+      "src": "images/creations/IMG-20260201-WA0009.jpg",
+      "alt": "Créations"
+    },
+    {
+      "src": "images/creations/IMG-20260202-WA0001.jpg",
+      "alt": "Créations"
+    },
+    {
+      "src": "images/creations/IMG-20260202-WA0007.jpg",
+      "alt": "Créations"
+    },
+    {
+      "src": "images/creations/IMG-20260209-WA0007.jpg",
+      "alt": "Créations"
+    },
+    {
+      "src": "images/creations/IMG-20260209-WA0009.jpg",
+      "alt": "Créations"
+    },
+    {
+      "src": "images/creations/IMG-20260209-WA0015.jpg",
+      "alt": "Créations"
+    },
+    {
+      "src": "images/creations/IMG-20260209-WA0027.jpg",
+      "alt": "Créations"
+    },
+    {
+      "src": "images/creations/IMG-20260209-WA0033.jpg",
+      "alt": "Créations"
+    },
+    {
+      "src": "images/creations/IMG-20260209-WA0039.jpg",
+      "alt": "Créations"
+    },
+    {
+      "src": "images/creations/VID-20260202-WA0013.mp4",
+      "alt": "Créations — vidéo",
+      "type": "video"
     }
   ]
 }

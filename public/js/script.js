@@ -710,7 +710,7 @@ function generateGallery() {
   galleryContainer.innerHTML = ''
 
   // Ordre des albums (correspond aux onglets)
-  const albumOrder = ['concert', 'centre', 'vie', 'repetition', 'don']
+  const albumOrder = ['concert', 'centre', 'vie', 'repetition', 'creations', 'don']
 
   // Générer chaque album
   albumOrder.forEach((albumId, index) => {
@@ -726,18 +726,30 @@ function generateGallery() {
       albumPanel.classList.add('hidden')
     }
 
-    // Si l'album a des images, les générer
+    // Si l'album a des médias (images ou vidéos), les générer
     if (images.length > 0) {
       images.forEach((image) => {
         const galleryItem = document.createElement('div')
         galleryItem.className = 'gallery-item'
 
-        const img = document.createElement('img')
-        img.src = image.src
-        img.alt = image.alt || 'Photo'
-        img.loading = 'lazy'
+        const isVideo =
+          image.type === 'video' || /\.(mp4|webm|ogg)$/i.test(image.src || '')
+        if (isVideo) {
+          const v = document.createElement('video')
+          v.src = image.src
+          v.controls = true
+          v.playsInline = true
+          v.setAttribute('preload', 'metadata')
+          v.setAttribute('aria-label', image.alt || 'Vidéo')
+          galleryItem.appendChild(v)
+        } else {
+          const img = document.createElement('img')
+          img.src = image.src
+          img.alt = image.alt || 'Photo'
+          img.loading = 'lazy'
+          galleryItem.appendChild(img)
+        }
 
-        galleryItem.appendChild(img)
         albumPanel.appendChild(galleryItem)
       })
     } else {

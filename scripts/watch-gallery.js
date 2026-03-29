@@ -28,7 +28,8 @@ const ALBUM_FOLDERS = [
   'instrument-parc',
   'vie-quotidienne',
   'repetition',
-  'dons'
+  'dons',
+  'creations'
 ]
 
 console.log("👀 Surveillance des dossiers d'images activée...\n")
@@ -53,11 +54,11 @@ function watchFolder(folderPath, folderName) {
 
   fs.watch(folderPath, { recursive: false }, (eventType, filename) => {
     if (filename) {
-      // Vérifier si c'est une image
       const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
+      const videoExtensions = ['.mp4', '.webm', '.ogg']
       const ext = path.extname(filename).toLowerCase()
 
-      if (imageExtensions.includes(ext)) {
+      if (imageExtensions.includes(ext) || videoExtensions.includes(ext)) {
         console.log(
           `\n🔄 Modification détectée dans ${folderName}: ${filename}`
         )
