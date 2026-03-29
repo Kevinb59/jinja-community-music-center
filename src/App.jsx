@@ -32,7 +32,6 @@ import {
 import {
   copy,
   DONOR_COUNTRY_LABELS,
-  donorCountryFlagEmoji,
   DONORS_DEMO,
   INSTRUMENTS_NEEDED,
   legalModalBodyHtml,
@@ -339,6 +338,29 @@ function GalleryLightbox({ open, src, alt, onClose }) {
         className="pointer-events-none max-h-[min(90dvh,100%)] max-w-[min(95dvw,100%)] object-contain shadow-2xl"
       />
     </div>
+  )
+}
+
+/**
+ * Drapeau pays (ISO2) : SVG dans `public/flags/{code}.svg` — même origine que le site (aperçu Cursor, hors-ligne, pas de CDN).
+ * Variables : code ISO2 ; libellé accessibilité depuis DONOR_COUNTRY_LABELS.
+ */
+function DonorFlagIcon({ code }) {
+  const label = DONOR_COUNTRY_LABELS[code]
+  if (!code || !label) return null
+  const iso = String(code).toLowerCase()
+  return (
+    <span role="img" aria-label={label} className="inline-flex h-6 w-8 shrink-0 overflow-hidden rounded-sm shadow-sm ring-1 ring-white/25">
+      <img
+        src={`/flags/${iso}.svg`}
+        alt=""
+        width={32}
+        height={24}
+        className="h-full w-full object-contain object-center"
+        loading="lazy"
+        decoding="async"
+      />
+    </span>
   )
 }
 
@@ -1362,19 +1384,9 @@ export default function App() {
                         )}
                       </div>
                       <div className="min-w-0 flex-1 space-y-2 text-sm">
-                        <p className="flex items-baseline gap-2 text-base font-semibold leading-snug text-white">
+                        <p className="flex items-center gap-2 text-base font-semibold leading-snug text-white">
                           {row.country && DONOR_COUNTRY_LABELS[row.country] ? (
-                            <span
-                              className="shrink-0 text-[1.35rem] leading-none"
-                              style={{
-                                fontFamily:
-                                  '"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif'
-                              }}
-                              role="img"
-                              aria-label={DONOR_COUNTRY_LABELS[row.country]}
-                            >
-                              {donorCountryFlagEmoji(row.country)}
-                            </span>
+                            <DonorFlagIcon code={row.country} />
                           ) : null}
                           <span className="min-w-0">{row.name}</span>
                         </p>

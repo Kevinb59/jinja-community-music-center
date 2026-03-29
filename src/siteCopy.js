@@ -144,7 +144,7 @@ export const copy = {
   donorsText:
     'Nous remercions les donateurs. Si vous préférez, votre don peut apparaître comme « Anonyme ».',
   /** Affiché sous le titre de la liste des donateurs. */
-  donorsDemoNote: 'Merci aux donateurs. Les dates seront complétées lorsque disponibles.',
+  donorsDemoNote: 'Merci aux donateurs.',
   donorsColGift: 'Don',
   donorsColType: 'Type',
   donorsColDate: 'Date',
@@ -261,7 +261,7 @@ export const legalModalBodyHtml = `
 </div>
 `.trim()
 
-/** Noms de pays (FR) — accessibilité / titre du drapeau uniquement, pas affichés en clair dans la carte. */
+/** Noms de pays (FR) — `aria-label` du drapeau (`public/flags/{iso}.svg`, voir DonorFlagIcon dans App.jsx). */
 export const DONOR_COUNTRY_LABELS = {
   BE: 'Belgique',
   US: 'États-Unis',
@@ -269,27 +269,16 @@ export const DONOR_COUNTRY_LABELS = {
 }
 
 /**
- * Drapeau emoji (ISO 3166-1 alpha-2). Formule classique 127397 + code lettre (affichage Windows / macOS).
- */
-export function donorCountryFlagEmoji(iso2) {
-  if (!iso2 || typeof iso2 !== 'string' || iso2.length !== 2) return ''
-  const upper = iso2.toUpperCase()
-  return String.fromCodePoint(
-    ...[...upper].map((c) => 127397 + c.charCodeAt(0))
-  )
-}
-
-/**
  * Grille « Nos donateurs » : type financial | material (styles de carte dans App.jsx).
- * country : optionnel, ISO2 — drapeau seul avant le nom du donateur (pas de pays en toutes lettres).
- * date : utiliser « — » si la date n’est pas encore connue.
+ * country : optionnel, ISO2 — drapeau image avant le nom (pas de pays en toutes lettres).
+ * Ordre du tableau : du don le plus récent au plus ancien (affichage tel quel dans App.jsx).
  */
 export const DONORS_DEMO = [
+  { name: 'Francesco Giovacchini', gift: '25 $', type: 'financial', date: 'Mars 2026', country: 'DE' },
+  { name: 'Conor Chapman', gift: '100 $', type: 'financial', date: 'Févr. 2026', country: 'US' },
+  { name: 'John Lucas', gift: '25 $', type: 'financial', date: 'Févr. 2026', country: 'US' },
   { name: 'Danny Plets', gift: '1 trompette', type: 'material', date: 'Févr. 2026', country: 'BE' },
-  { name: 'Conor Chapman', gift: '100 $', type: 'financial', date: '—', country: 'US' },
-  { name: 'Francesco Giovacchini', gift: '25 $', type: 'financial', date: '—', country: 'DE' },
-  { name: 'John Lucas', gift: '25 $', type: 'financial', date: '—', country: 'US' },
-  { name: 'Catalina Chess', gift: '20 $', type: 'financial', date: '—', country: 'US' }
+  { name: 'Catalina Chess', gift: '20 $', type: 'financial', date: '26 janv. 2026', country: 'US' }
 ]
 
 export const INSTRUMENTS_NEEDED = [
