@@ -1439,10 +1439,9 @@ export default function App() {
             <Card className="mt-8">
               <CardContent className="space-y-5 p-6 text-sm leading-7 text-slate-300 md:p-8">
                 <div className="rounded-3xl border border-white/10 bg-slate-950/45 p-5">
-                  <p className="text-base font-semibold text-white">{copy.contactTeamTitle}</p>
-                  <p className="mt-2 font-semibold text-white">{copy.contactName}</p>
-                  <p className="text-slate-300">{copy.contactRole}</p>
-                  <p className="mt-3 text-slate-400">{copy.contactDesc}</p>
+                  <p className="text-base font-semibold text-white">{copy.contactName}</p>
+                  <p className="mt-2 text-slate-300">{copy.contactRole}</p>
+                  <p className="mt-4 text-slate-300">{copy.contactDesc}</p>
                 </div>
 
                 <Button className="mt-2" onClick={() => setContactModalOpen(true)}>

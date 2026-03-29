@@ -239,12 +239,11 @@ const i18n = {
     contact_text:
       'Les contacts se font uniquement via le site internet. Nous nous engageons à répondre sous une semaine maximum.',
     contact_team: '',
-    contact_team_title: 'Notre équipe',
+    contact_team_title: '',
     contact_team_contact_name: '<strong>EMILIE EMPIS</strong>',
-    contact_team_contact_role:
-      "Présidente de l'association — Personne contact principale",
+    contact_team_contact_role: "Présidente de l'association",
     contact_team_contact_desc:
-      "C'est cette personne qui répond à vos messages et questions via le formulaire de contact.",
+      "Merci de nous écrire : nous lisons chaque message avec attention et vous répondons avec plaisir. Votre message compte pour nous, et nous avons hâte d’échanger avec vous.",
     contact_note:
       "⚠️ Dans ce prototype, le formulaire essaie d'appeler une URL Google Apps Script (à remplacer dans le code).",
     form_name: 'Nom',
@@ -462,11 +461,11 @@ const i18n = {
     contact_text:
       'Contact is only through the website. We commit to responding within a maximum of one week.',
     contact_team: '',
-    contact_team_title: 'Our team',
+    contact_team_title: '',
     contact_team_contact_name: '<strong>EMILIE EMPIS</strong>',
-    contact_team_contact_role: 'Association President — Main contact person',
+    contact_team_contact_role: 'Association President',
     contact_team_contact_desc:
-      'This person responds to your messages and questions via the contact form.',
+      "Thank you for writing to us: we read every message with care and reply gladly. Your message matters to us, and we look forward to hearing from you.",
     contact_note:
       '⚠️ In this prototype, the form calls a Google Apps Script URL (replace it in the code).',
     form_name: 'Name',

@@ -10,7 +10,7 @@ export const paths = {
   context: 'images/contexte.jpg',
   avenir: 'images/repetition/avenir.jpg',
   vieDaily: 'images/viequoti.jpg',
-  creations: 'images/fibrebanane.jpg'
+  creations: 'images/creations.jpg'
 }
 
 export const copy = {
@@ -134,11 +134,10 @@ export const copy = {
   contactTitle: 'Contact',
   contactText:
     'Les contacts se font uniquement via le site internet. Nous nous engageons à répondre sous une semaine maximum.',
-  contactTeamTitle: 'Notre équipe',
   contactName: 'EMILIE EMPIS',
-  contactRole: "Présidente de l'association — Personne contact principale",
+  contactRole: "Présidente de l'association",
   contactDesc:
-    "C'est cette personne qui répond à vos messages et questions via le formulaire de contact.",
+    "Merci de nous écrire : nous lisons chaque message avec attention et vous répondons avec plaisir. Votre message compte pour nous, et nous avons hâte d’échanger avec vous.",
   contactFormOpenBtn: 'Ouvrir le formulaire de contact',
   formSend: 'Envoyer',
   matSend: 'Envoyer la proposition',
