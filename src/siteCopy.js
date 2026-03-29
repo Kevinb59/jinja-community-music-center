@@ -119,6 +119,8 @@ export const copy = {
   creationsText:
     "Les enfants du centre participent à des ateliers créatifs où ils fabriquent des objets faits main. Ces créations artisanales utilisent des matières premières locales et naturelles : fibre de bananiers, feuilles de bananier, et cordes en sisal. Les ventes soutiennent le projet associatif et le fonctionnement du centre.",
   creationsBtnShop: 'Voir la boutique',
+  /** Affiché en surimpression lorsque la boutique est fermée (voir SHOP_OPEN dans siteConfig.js). */
+  shopClosedBanner: 'Boutique fermée temporairement',
   creationsOrderTitle: 'Comment commander ?',
   creationsOrderHtml: `Rendez-vous sur notre boutique où vous pourrez voir les prix et sélectionner la quantité souhaitée. Le paiement se fait par virement bancaire sur le compte de l'association.`,
   galleryEyebrow: 'Galerie',
@@ -141,8 +143,8 @@ export const copy = {
   donorsTitle: 'Nos donateurs',
   donorsText:
     'Nous remercions les donateurs. Si vous préférez, votre don peut apparaître comme « Anonyme ».',
-  /** Affiché sous le titre : précise que la grille est encore factice. */
-  donorsDemoNote: 'Exemples fictifs pour prévisualiser la présentation — à remplacer par les dons réels.',
+  /** Affiché sous le titre de la liste des donateurs. */
+  donorsDemoNote: 'Merci aux donateurs. Les dates seront complétées lorsque disponibles.',
   donorsColGift: 'Don',
   donorsColType: 'Type',
   donorsColDate: 'Date',
@@ -259,18 +261,35 @@ export const legalModalBodyHtml = `
 </div>
 `.trim()
 
+/** Noms de pays (FR) — accessibilité / titre du drapeau uniquement, pas affichés en clair dans la carte. */
+export const DONOR_COUNTRY_LABELS = {
+  BE: 'Belgique',
+  US: 'États-Unis',
+  DE: 'Allemagne'
+}
+
 /**
- * Grille « Nos donateurs » : données de démo uniquement (noms / montants inventés).
- * type financial | material : deux styles de carte comme sur le site HTML.
+ * Drapeau emoji (ISO 3166-1 alpha-2). Formule classique 127397 + code lettre (affichage Windows / macOS).
+ */
+export function donorCountryFlagEmoji(iso2) {
+  if (!iso2 || typeof iso2 !== 'string' || iso2.length !== 2) return ''
+  const upper = iso2.toUpperCase()
+  return String.fromCodePoint(
+    ...[...upper].map((c) => 127397 + c.charCodeAt(0))
+  )
+}
+
+/**
+ * Grille « Nos donateurs » : type financial | material (styles de carte dans App.jsx).
+ * country : optionnel, ISO2 — drapeau seul avant le nom du donateur (pas de pays en toutes lettres).
+ * date : utiliser « — » si la date n’est pas encore connue.
  */
 export const DONORS_DEMO = [
-  { name: 'Danny Plets', gift: '1 trompette', type: 'material', date: 'Févr. 2026' },
-  { name: 'Collectif Cuivres & Percus — Lille', gift: '320 €', type: 'financial', date: 'Févr. 2025' },
-  { name: 'Marie Lefèvre', gift: 'Méthodes & partitions', type: 'material', date: 'Jan. 2025' },
-  { name: 'Anonyme', gift: '80 €', type: 'financial', date: 'Jan. 2025' },
-  { name: 'Atelier Lutherie du Nord', gift: 'Kit entretien cuivres', type: 'material', date: 'Déc. 2024' },
-  { name: 'Famille Garnier', gift: '200 €', type: 'financial', date: 'Déc. 2024' },
-  { name: 'Sophie & Thomas M.', gift: '2 pupitres pliants', type: 'material', date: 'Nov. 2024' }
+  { name: 'Danny Plets', gift: '1 trompette', type: 'material', date: 'Févr. 2026', country: 'BE' },
+  { name: 'Conor Chapman', gift: '100 $', type: 'financial', date: '—', country: 'US' },
+  { name: 'Francesco Giovacchini', gift: '25 $', type: 'financial', date: '—', country: 'DE' },
+  { name: 'John Lucas', gift: '25 $', type: 'financial', date: '—', country: 'US' },
+  { name: 'Catalina Chess', gift: '20 $', type: 'financial', date: '—', country: 'US' }
 ]
 
 export const INSTRUMENTS_NEEDED = [

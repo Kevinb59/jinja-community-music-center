@@ -26,10 +26,13 @@ import { submitToGas } from './gasSubmit'
 import {
   BRAND_NAME,
   DONATION_PAGE_URL,
-  legacyPage
+  legacyPage,
+  SHOP_OPEN
 } from './siteConfig'
 import {
   copy,
+  DONOR_COUNTRY_LABELS,
+  donorCountryFlagEmoji,
   DONORS_DEMO,
   INSTRUMENTS_NEEDED,
   legalModalBodyHtml,
@@ -284,6 +287,62 @@ function SiteImage({ src, alt, tall = false, preserveAspect = false, className =
 }
 
 /**
+ * Vignette galerie : cadre carré (aspect-square), image en couverture ; clic → agrandissement.
+ * Variables : failed (image absente), onPick (ouvre le lightbox avec src/alt).
+ */
+function GalleryThumb({ src, alt, onPick }) {
+  const [failed, setFailed] = useState(false)
+  if (!src || failed) {
+    return (
+      <div
+        className="flex aspect-square w-full flex-col items-center justify-center gap-1 rounded-2xl border border-white/10 bg-slate-900/50 p-2 text-center"
+        aria-hidden
+      >
+        <ImageIcon className="h-6 w-6 text-slate-500" />
+        <span className="text-[11px] leading-tight text-slate-500">Indisponible</span>
+      </div>
+    )
+  }
+  return (
+    <button
+      type="button"
+      onClick={onPick}
+      className="group aspect-square w-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900/50 text-left transition hover:border-emerald-400/35 focus:outline-none focus:ring-2 focus:ring-emerald-400/40"
+    >
+      <img
+        src={assetUrl(src)}
+        alt={alt || 'Galerie'}
+        className="h-full w-full object-cover transition group-hover:opacity-90"
+        loading="lazy"
+        onError={() => setFailed(true)}
+      />
+    </button>
+  )
+}
+
+/**
+ * Lightbox galerie : plein écran, image limitée au viewport ; clic sur le voile ferme (Échap : App).
+ */
+function GalleryLightbox({ open, src, alt, onClose }) {
+  if (!open || !src) return null
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex cursor-zoom-out items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Photo en grand"
+      onClick={onClose}
+    >
+      <img
+        src={assetUrl(src)}
+        alt={alt || ''}
+        className="pointer-events-none max-h-[min(90dvh,100%)] max-w-[min(95dvw,100%)] object-contain shadow-2xl"
+      />
+    </div>
+  )
+}
+
+/**
  * Tuile « carrousel » : photo pleine lumière quand repliée ; titre + CTA dans un bloc bas sombre
  * seul ; au clic, texte en surimpression avec voile + blur.
  * Key variables : expanded (affichage du panneau texte), imgFailed (repli visuel si fichier absent).
@@ -521,6 +580,8 @@ export default function App() {
   const [transparencyModalOpen, setTransparencyModalOpen] = useState(false)
   const [legalModalOpen, setLegalModalOpen] = useState(false)
   const [activeNavId, setActiveNavId] = useState('')
+  /** { src, alt } quand une photo galerie est ouverte en plein écran ; null sinon. */
+  const [galleryLightbox, setGalleryLightbox] = useState(null)
 
   const anyOverlayOpen =
     mobileMenuOpen ||
@@ -528,7 +589,8 @@ export default function App() {
     contactModalOpen ||
     transparencyModalOpen ||
     legalModalOpen ||
-    instrumentsOpen
+    instrumentsOpen ||
+    galleryLightbox !== null
 
   // Purpose: une seule logique pour menu mobile + modales (scroll body, Échap ferme la couche du dessus).
   useEffect(() => {
@@ -537,6 +599,10 @@ export default function App() {
     document.body.style.overflow = 'hidden'
     const onKey = (e) => {
       if (e.key !== 'Escape') return
+      if (galleryLightbox) {
+        setGalleryLightbox(null)
+        return
+      }
       // Ordre : modale la plus « au-dessus » en premier (pile proche du bas du DOM).
       if (contactModalOpen) setContactModalOpen(false)
       else if (materialModalOpen) setMaterialModalOpen(false)
@@ -557,7 +623,8 @@ export default function App() {
     contactModalOpen,
     transparencyModalOpen,
     legalModalOpen,
-    instrumentsOpen
+    instrumentsOpen,
+    galleryLightbox
   ])
 
   // Purpose: au passage en vue large, refermer les panneaux plein écran (menu + modales).
@@ -630,12 +697,11 @@ export default function App() {
     }
   }, [])
 
+  // Liste complète des images de l’album actif (onglets → clés de gallery-data.json).
   const galleryImages = useMemo(() => {
     const list = galleryData[activeTab]
     return Array.isArray(list) ? list : []
   }, [activeTab])
-
-  const previewGallery = useMemo(() => galleryImages.slice(0, 6), [galleryImages])
 
   async function onContactSubmit(e) {
     e.preventDefault()
@@ -1134,31 +1200,59 @@ export default function App() {
 
           <SectionNeonDivider />
 
-          <section className="mt-0 grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-start" id="creations">
-            <div className="space-y-6">
-              <SectionTitle eyebrow={copy.creationsEyebrow} title={copy.creationsTitle} text={copy.creationsText} />
-              <Card>
-                <CardContent className="p-6">
-                  <p className="text-sm font-semibold text-white">{copy.creationsOrderTitle}</p>
-                  <p className="mt-2 text-sm leading-7 text-slate-300">{copy.creationsOrderHtml}</p>
-                  <a
-                    href={legacyPage('boutique.html')}
-                    className="mt-3 inline-block text-sm font-medium text-emerald-300 underline hover:text-emerald-200"
-                  >
-                    {copy.creationsBtnShop} →
-                  </a>
-                </CardContent>
-              </Card>
-              <div className="flex flex-wrap gap-3">
-                <Button href={legacyPage('boutique.html')}>
-                  <ShoppingBag className="mr-2 h-4 w-4" /> {copy.creationsBtnShop}
-                </Button>
-                <Button variant="outline" onClick={() => setContactModalOpen(true)}>
-                  Commander via le contact
-                </Button>
+          {/* Nos créations : grille 2 col comme avant (texte + carte à gauche, image à droite). Flou / banderole si SHOP_OPEN === false. */}
+          <section className="relative mt-0 grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-start" id="creations">
+            <div className="min-w-0 space-y-6">
+              <div className="relative z-[3]">
+                <SectionTitle eyebrow={copy.creationsEyebrow} title={copy.creationsTitle} text={copy.creationsText} />
+              </div>
+              <div
+                className={cn(
+                  'space-y-6',
+                  !SHOP_OPEN && 'pointer-events-none select-none blur-[3px] opacity-[0.82]'
+                )}
+              >
+                <Card>
+                  <CardContent className="p-6">
+                    <p className="text-sm font-semibold text-white">{copy.creationsOrderTitle}</p>
+                    <p className="mt-2 text-sm leading-7 text-slate-300">{copy.creationsOrderHtml}</p>
+                    <a
+                      href={legacyPage('boutique.html')}
+                      className="mt-3 inline-block text-sm font-medium text-emerald-300 underline hover:text-emerald-200"
+                    >
+                      {copy.creationsBtnShop} →
+                    </a>
+                  </CardContent>
+                </Card>
+                <div className="flex flex-wrap gap-3">
+                  <Button href={legacyPage('boutique.html')}>
+                    <ShoppingBag className="mr-2 h-4 w-4" /> {copy.creationsBtnShop}
+                  </Button>
+                  <Button variant="outline" onClick={() => setContactModalOpen(true)}>
+                    Commander via le contact
+                  </Button>
+                </div>
               </div>
             </div>
-            <SiteImage src={paths.creations} alt="Créations des enfants" tall />
+            <div
+              className={cn(
+                'relative z-[1] min-w-0',
+                !SHOP_OPEN && 'pointer-events-none select-none blur-[3px] opacity-[0.82]'
+              )}
+            >
+              <SiteImage src={paths.creations} alt="Créations des enfants" tall />
+            </div>
+            {!SHOP_OPEN ? (
+              <div
+                className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] flex items-center justify-center px-4 pb-6 pt-4 sm:px-6"
+                style={{ top: 'clamp(10.5rem, 32vw, 17rem)' }}
+                aria-hidden="true"
+              >
+                <p className="max-w-md text-center rounded-full border border-white/20 bg-slate-950/90 px-6 py-3 text-sm font-semibold text-white shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-sm">
+                  {copy.shopClosedBanner}
+                </p>
+              </div>
+            ) : null}
           </section>
 
           <SectionNeonDivider />
@@ -1187,12 +1281,19 @@ export default function App() {
                   </button>
                 ))}
               </div>
-              {previewGallery.length === 0 ? (
+              {galleryImages.length === 0 ? (
                 <p className="mt-6 px-2 text-sm text-slate-500">Aucune image dans cet album pour le moment.</p>
               ) : (
-                <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {previewGallery.map((img) => (
-                    <SiteImage key={img.src} src={img.src} alt={img.alt || 'Galerie'} />
+                <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+                  {galleryImages.map((img, idx) => (
+                    <GalleryThumb
+                      key={`${img.src}-${idx}`}
+                      src={img.src}
+                      alt={img.alt || 'Galerie'}
+                      onPick={() =>
+                        setGalleryLightbox({ src: img.src, alt: img.alt || 'Galerie' })
+                      }
+                    />
                   ))}
                 </div>
               )}
@@ -1261,7 +1362,22 @@ export default function App() {
                         )}
                       </div>
                       <div className="min-w-0 flex-1 space-y-2 text-sm">
-                        <p className="text-base font-semibold leading-snug text-white">{row.name}</p>
+                        <p className="flex items-baseline gap-2 text-base font-semibold leading-snug text-white">
+                          {row.country && DONOR_COUNTRY_LABELS[row.country] ? (
+                            <span
+                              className="shrink-0 text-[1.35rem] leading-none"
+                              style={{
+                                fontFamily:
+                                  '"Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif'
+                              }}
+                              role="img"
+                              aria-label={DONOR_COUNTRY_LABELS[row.country]}
+                            >
+                              {donorCountryFlagEmoji(row.country)}
+                            </span>
+                          ) : null}
+                          <span className="min-w-0">{row.name}</span>
+                        </p>
                         <p className="text-slate-300">
                           <span className="text-slate-500">{copy.donorsColGift} · </span>
                           {row.gift}
@@ -1491,6 +1607,13 @@ export default function App() {
           ))}
         </ul>
       </ModalPanel>
+
+      <GalleryLightbox
+        open={galleryLightbox !== null}
+        src={galleryLightbox?.src}
+        alt={galleryLightbox?.alt}
+        onClose={() => setGalleryLightbox(null)}
+      />
     </div>
   )
 }

@@ -24,3 +24,9 @@ export const GAS_MATERIAL_URL =
 export function legacyPage(fileName) {
   return `/${fileName}`
 }
+
+/**
+ * Boutique en ligne (page boutique + CTA section « Nos créations »).
+ * Mettre à `true` quand la boutique est ouverte ; `false` affiche la zone en flou + banderole.
+ */
+export const SHOP_OPEN = false
