@@ -3,7 +3,7 @@
  * Images : préfixe /images/ (dossier `images/` à la racine ; copié dans dist au build, servi en dev par vite.config.js).
  * Page boutique : fichier dans `public/` (URL racine, ex. /boutique.html).
  */
-import React, { useEffect, useId, useMemo, useState } from 'react'
+import React, { useEffect, useId, useMemo, useRef, useState } from 'react'
 import {
   ArrowRight,
   CircleDollarSign,
@@ -320,23 +320,88 @@ function GalleryThumb({ src, alt, onPick }) {
 }
 
 /**
- * Lightbox galerie : plein écran, image limitée au viewport ; clic sur le voile ferme (Échap : App).
+ * Lightbox galerie : navigation au swipe (tactile) et flèches clavier ; tap / clic simple ferme.
+ * Variables : touchStartRef (coords départ), skipClickRef (évite double action après swipe).
  */
-function GalleryLightbox({ open, src, alt, onClose }) {
-  if (!open || !src) return null
+function GalleryLightbox({ open, images, index, onClose, onNavigate }) {
+  const touchStartRef = useRef(null)
+  const skipClickRef = useRef(false)
+  const SWIPE_MIN = 50
+
+  const total = images.length
+  const safeIndex = total > 0 ? Math.min(Math.max(0, index), total - 1) : 0
+  const current = images[safeIndex]
+
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e) => {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault()
+        onNavigate(Math.max(0, safeIndex - 1))
+      }
+      if (e.key === 'ArrowRight') {
+        e.preventDefault()
+        onNavigate(Math.min(total - 1, safeIndex + 1))
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open, safeIndex, total, onNavigate])
+
+  if (!open || !current || total === 0) return null
+
+  const src = current.src
+  const alt = current.alt || 'Galerie'
+
+  function onTouchStart(e) {
+    const t = e.touches[0]
+    touchStartRef.current = { x: t.clientX, y: t.clientY }
+  }
+
+  function onTouchEnd(e) {
+    const start = touchStartRef.current
+    touchStartRef.current = null
+    if (!start) return
+    const t = e.changedTouches[0]
+    const dx = t.clientX - start.x
+    const dy = t.clientY - start.y
+    if (Math.abs(dx) < SWIPE_MIN || Math.abs(dx) < Math.abs(dy) * 0.75) return
+    skipClickRef.current = true
+    if (dx < 0) {
+      onNavigate(Math.min(safeIndex + 1, total - 1))
+    } else {
+      onNavigate(Math.max(safeIndex - 1, 0))
+    }
+  }
+
+  function handleOverlayClick() {
+    if (skipClickRef.current) {
+      skipClickRef.current = false
+      return
+    }
+    onClose()
+  }
+
   return (
     <div
-      className="fixed inset-0 z-[100] flex cursor-zoom-out items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex cursor-zoom-out touch-manipulation flex-col items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
-      aria-label="Photo en grand"
-      onClick={onClose}
+      aria-label={`Photo ${safeIndex + 1} sur ${total}`}
+      onClick={handleOverlayClick}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
     >
       <img
         src={assetUrl(src)}
-        alt={alt || ''}
+        alt={alt}
         className="pointer-events-none max-h-[min(90dvh,100%)] max-w-[min(95dvw,100%)] object-contain shadow-2xl"
       />
+      {total > 1 ? (
+        <p className="pointer-events-none mt-4 text-sm text-white/60" aria-hidden="true">
+          {safeIndex + 1} / {total}
+        </p>
+      ) : null}
     </div>
   )
 }
@@ -463,23 +528,6 @@ function ProjectImageTile({ id: tileId, images, title, content, imageAlts = [], 
 }
 
 /**
- * Slide sans visuel (ex. autres membres, besoin dans le carrousel) : simple encadré texte.
- */
-function ProjectTextTile({ title, bodyHtml, className = '' }) {
-  return (
-    <Card className={cn('flex min-h-[220px] flex-col justify-center', className)}>
-      <CardHeader>
-        <CardTitle className="text-xl">{title}</CardTitle>
-      </CardHeader>
-      <CardContent
-        className="space-y-3 text-sm leading-7 text-slate-300 [&_strong]:text-white"
-        dangerouslySetInnerHTML={{ __html: bodyHtml }}
-      />
-    </Card>
-  )
-}
-
-/**
  * Localisation : pas de grande photo de slide — carte + texte dans un cadre pleine largeur.
  */
 function ProjectLocationTile({ className = '' }) {
@@ -602,8 +650,13 @@ export default function App() {
   const [transparencyModalOpen, setTransparencyModalOpen] = useState(false)
   const [legalModalOpen, setLegalModalOpen] = useState(false)
   const [activeNavId, setActiveNavId] = useState('')
-  /** { src, alt } quand une photo galerie est ouverte en plein écran ; null sinon. */
-  const [galleryLightbox, setGalleryLightbox] = useState(null)
+  /** Index de la photo ouverte en plein écran dans l’album courant ; null si fermé. */
+  const [galleryLightboxIndex, setGalleryLightboxIndex] = useState(null)
+
+  // Changer d’album ferme le lightbox pour éviter un index hors plage.
+  useEffect(() => {
+    setGalleryLightboxIndex(null)
+  }, [activeTab])
 
   const anyOverlayOpen =
     mobileMenuOpen ||
@@ -612,7 +665,7 @@ export default function App() {
     transparencyModalOpen ||
     legalModalOpen ||
     instrumentsOpen ||
-    galleryLightbox !== null
+    galleryLightboxIndex !== null
 
   // Purpose: une seule logique pour menu mobile + modales (scroll body, Échap ferme la couche du dessus).
   useEffect(() => {
@@ -621,8 +674,8 @@ export default function App() {
     document.body.style.overflow = 'hidden'
     const onKey = (e) => {
       if (e.key !== 'Escape') return
-      if (galleryLightbox) {
-        setGalleryLightbox(null)
+      if (galleryLightboxIndex !== null) {
+        setGalleryLightboxIndex(null)
         return
       }
       // Ordre : modale la plus « au-dessus » en premier (pile proche du bas du DOM).
@@ -646,7 +699,7 @@ export default function App() {
     transparencyModalOpen,
     legalModalOpen,
     instrumentsOpen,
-    galleryLightbox
+    galleryLightboxIndex
   ])
 
   // Purpose: au passage en vue large, refermer les panneaux plein écran (menu + modales).
@@ -937,8 +990,8 @@ export default function App() {
                 </Card>
                 <Card className="rounded-3xl bg-slate-950/40">
                   <CardContent className="p-5">
-                    <p className="text-3xl font-semibold">7</p>
-                    <p className="mt-1 text-sm text-slate-400">{copy.needsInstrumentsIntro}</p>
+                    <p className="text-3xl font-semibold">{DONORS_DEMO.length}</p>
+                    <p className="mt-1 text-sm text-slate-400">{copy.donationsCountLabel}</p>
                   </CardContent>
                 </Card>
                 <Card className="rounded-3xl bg-slate-950/40">
@@ -1014,7 +1067,12 @@ export default function App() {
                 content={<div dangerouslySetInnerHTML={{ __html: copy.teamHtml }} />}
               />
 
-              <ProjectTextTile title={copy.teamOtherTitle} bodyHtml={copy.teamOtherHtml} />
+              <ProjectImageTile
+                images={[paths.equipe]}
+                title={copy.teamOtherTitle}
+                imageAlts={["Équipe — autres membres de l'association"]}
+                content={<div dangerouslySetInnerHTML={{ __html: copy.teamOtherHtml }} />}
+              />
 
               <ProjectImageTile
                 images={[paths.context]}
@@ -1312,9 +1370,7 @@ export default function App() {
                       key={`${img.src}-${idx}`}
                       src={img.src}
                       alt={img.alt || 'Galerie'}
-                      onPick={() =>
-                        setGalleryLightbox({ src: img.src, alt: img.alt || 'Galerie' })
-                      }
+                      onPick={() => setGalleryLightboxIndex(idx)}
                     />
                   ))}
                 </div>
@@ -1621,10 +1677,11 @@ export default function App() {
       </ModalPanel>
 
       <GalleryLightbox
-        open={galleryLightbox !== null}
-        src={galleryLightbox?.src}
-        alt={galleryLightbox?.alt}
-        onClose={() => setGalleryLightbox(null)}
+        open={galleryLightboxIndex !== null}
+        images={galleryImages}
+        index={galleryLightboxIndex ?? 0}
+        onClose={() => setGalleryLightboxIndex(null)}
+        onNavigate={setGalleryLightboxIndex}
       />
     </div>
   )

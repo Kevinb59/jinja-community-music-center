@@ -6,6 +6,7 @@ export const paths = {
   heroSide: 'images/repetition/brass1.jpg',
   founder: 'images/qui22.jpg',
   emilie: 'images/emilie2.jpg',
+  equipe: 'images/equipe.jpg',
   context: 'images/contexte.jpg',
   avenir: 'images/repetition/avenir.jpg',
   vieDaily: 'images/viequoti.jpg',
@@ -19,7 +20,7 @@ export const copy = {
     "Jinja Community Music Center est un espace gratuit et sécurisé où les enfants peuvent apprendre, s'exprimer et grandir grâce à la musique.",
   heroNote:
     "Aujourd'hui, ils sont 27 musiciens mais il manque des instruments : c'est la raison de notre appel aux dons.",
-  countlineText: 'musiciens à ce jour',
+  countlineText: 'Musiciens à ce jour.',
   countlineTag: "Chaque don d'instrument compte",
   visualTitle: 'Priorité',
   visualText:
@@ -35,7 +36,7 @@ export const copy = {
   teamTitle: "La fondatrice de l'association",
   teamHtml: `<p>Professeure de tuba dans plusieurs écoles de musique et conservatoires de la région lilloise, la musique occupe une place centrale dans ma vie, tant sur le plan professionnel que personnel.</p><p>Ma rencontre avec BWIIRE JohnBosco a été une évidence. Depuis de nombreuses années, je nourrissais le désir profond de pouvoir aider des enfants grâce à la musique. Découvrir son engagement, son humanité et le travail qu'il mène chaque jour auprès des enfants de Jinja a donné un sens concret à ce rêve.</p><p>En tant qu'euphonium solo au sein d'un brass band, je mesure chaque jour la richesse de cette pratique collective. C'est cette richesse que je souhaite partager et rendre accessible à des enfants qui en ont profondément besoin.</p>`,
   teamOtherTitle: "L'équipe — autres membres",
-  teamOtherHtml: `<p><strong>Autres membres de l'association :</strong></p><p><strong>Trésorier :</strong> [Nom du trésorier]</p><p><strong>Secrétaire :</strong> [Nom du secrétaire]</p>`,
+  teamOtherHtml: `<p><strong>Autres membres de l'association :</strong></p><p><strong>Trésorier :</strong> Alexis DEPREZ</p><p><strong>Secrétaire :</strong> Kévin BLART</p>`,
   contextTitle: 'Contexte',
   contextText1:
     "À Jinja, beaucoup d'enfants grandissent avec des opportunités limitées : pauvreté, manque de soutien et absence d'espaces positifs.",
@@ -65,6 +66,8 @@ export const copy = {
   needsLead:
     "Aujourd'hui, 27 enfants/adolescents participent régulièrement. Beaucoup d'autres aimeraient rejoindre… mais les moyens manquent.",
   needsInstrumentsTitle: 'Instruments',
+  /** Carte hero : sous le nombre de donateurs listés (DONORS_DEMO). */
+  donationsCountLabel: 'Dons à ce jour.',
   needsInstrumentsIntro:
     "Nous cherchons ces instruments pour compléter l'orchestre.",
   needsPartitionsTitle: 'Partitions',

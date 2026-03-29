@@ -67,7 +67,7 @@ const i18n = {
     project_team_creator_desc: '',
     project_team_other_title: "L'équipe",
     project_team_other_text:
-      "<strong>Autres membres de l'association :</strong><br><br><strong>Trésorier :</strong> [Nom du trésorier]<br><strong>Secrétaire :</strong> [Nom du secrétaire]",
+      "<strong>Autres membres de l'association :</strong><br><br><strong>Trésorier :</strong> Alexis DEPREZ<br><strong>Secrétaire :</strong> Kévin BLART",
     project_team_members:
       "<strong>Membres de l'association :</strong><br><span></span>",
     project_team_members_title: "Membres de l'association :",
