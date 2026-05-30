@@ -40,9 +40,10 @@ const i18n = {
     nav_donors: 'Nos donateurs',
     cta_donate: 'Faire un don',
     pill: 'Musique • Enfance • Jinja',
-    hero_title: 'Un lieu culturel qui forme des musiciens.',
+    hero_title:
+      'Chaque enfant mérite une éducation, un cadre bienveillant et la possibilité de rêver grâce à la musique.',
     hero_subtitle:
-      "Jinja Community Music Center est un espace gratuit et sécurisé où les enfants peuvent apprendre, s'exprimer et grandir grâce à la musique.",
+      "À Jinja, en Ouganda, nous soutenons un centre musical communautaire qui accueille des enfants et des jeunes en situation de précarité. Grâce à la musique, ils développent confiance en eux, discipline, esprit d'équipe et espoir pour l'avenir.",
     hero_note:
       "Aujourd'hui, ils sont <strong>27 musiciens</strong> mais il manque des instruments : c'est la raison de notre appel aux dons.",
     hero_cta_donate: 'Faire un don',
@@ -74,7 +75,7 @@ const i18n = {
     project_team_members_list: '',
     project_context_title: 'Contexte',
     project_context_text:
-      "À Jinja, beaucoup d'enfants grandissent avec des opportunités limitées : pauvreté, manque de soutien et absence d'espaces positifs. Le centre est une alternative concrète : un lieu simple, mais stable, où l'on apprend, où l'on se sent reconnu, et où l'on construit de la confiance.",
+      "À Jinja, de nombreuses familles vivent avec des ressources très limitées. Pour certains enfants, l'accès à l'éducation, à des activités positives ou même à une alimentation régulière peut être un défi quotidien. Le centre est une alternative concrète : un lieu sûr où les enfants trouvent un cadre bienveillant, développent leurs talents musicaux et construisent peu à peu leur confiance et leur avenir.",
     project_house_title: 'Une maison devenue refuge',
     project_house_text:
       "Ce lieu est à la fois un foyer, une école informelle, un espace d'expression et une bulle de protection. Chaque jour, les enfants s'y retrouvent pour apprendre, pratiquer et se soutenir.",
@@ -112,16 +113,18 @@ const i18n = {
     needs_3_text:
       'Pour faire vivre le lieu : fonctionnement, loyer, charges, nourriture pour les enfants, matériel pédagogique, organisation des activités.',
     help_title: 'Aider',
-    help_1_title: 'Choisis ton type de don',
+    help_1_title: 'Choisir le type de don',
     help_1_text:
-      "Financier ou matériel (instruments, partitions, accessoires, matériel d'entretien, pupitres).",
-    help_2_title: 'Remplis le formulaire',
-    help_2_text: 'Nous te recontactons rapidement avec les étapes suivantes.',
-    help_3_title: 'On te tient au courant',
-    help_3_text: 'Photos, nouvelles, avancées : transparence et suivi.',
+      "Financier ou matériel : instruments, partitions, accessoires, matériel d'entretien, pupitres.",
+    help_2_title: 'Compléter le formulaire',
+    help_2_text:
+      "L'équipe vous recontacte avec les modalités pratiques dans les meilleurs délais.",
+    help_3_title: "Suivre l'avancement du projet",
+    help_3_text:
+      "Actualités, photos et avancées : un suivi régulier et une transparence sur l'utilisation des dons.",
     donate_title: 'Donner',
     donate_text:
-      "Deux façons d'aider : un don financier (le plus rapide) ou un don matériel (instruments, partitions, accessoires, matériel d'entretien, pupitres).",
+      'Deux formes de soutien sont possibles : un don financier, le plus direct, ou un don matériel (instruments, partitions, accessoires, matériel d\'entretien, pupitres).',
     transparency_btn: 'Transparence & utilisation des dons',
     transparency_title: 'Transparence & utilisation des dons',
     transparency_content:
@@ -132,7 +135,7 @@ const i18n = {
     donate_fin_btn: 'Accéder à la page de don',
     donate_mat_title: 'Don matériel',
     donate_mat_text:
-      "Propose un instrument, des partitions, des accessoires, du matériel d'entretien ou des pupitres : remplis le formulaire ci-dessous.",
+      "Instruments, partitions, accessoires, matériel d'entretien ou pupitres : complétez le formulaire ci-dessous pour proposer un don matériel.",
     donate_mat_btn: 'Remplir le formulaire don matériel',
     donate_mat_list: "Voir la liste d'instruments",
     donate_info_title: 'Comment ça fonctionne ?',
@@ -141,13 +144,13 @@ const i18n = {
       "Les dons financiers sont transférés directement vers le compte de l'association. Nous utilisons des plateformes sécurisées pour les transferts internationaux vers l'Ouganda. Les fonds servent immédiatement au fonctionnement du centre, à l'achat d'instruments sur place, au loyer, aux charges et à la nourriture pour les enfants.",
     donate_info_mat_title: 'Dons matériels',
     donate_info_mat_text:
-      "Après réception de ton formulaire, nous te recontactons pour organiser l'envoi. Pour les instruments, accessoires, matériel d'entretien et pupitres, nous coordonnons l'expédition vers l'Ouganda. Les dons matériels peuvent être regroupés pour optimiser les coûts d'expédition : nous attendons parfois plusieurs dons avant d'organiser un envoi groupé. Vous serez informé du planning d'expédition. Pour les partitions dématérialisées, nous t'enverrons un email avec les instructions pour le transfert des fichiers.",
+      "Après réception de votre formulaire, l'équipe vous recontacte pour organiser l'envoi. Pour les instruments, accessoires, matériel d'entretien et pupitres, nous coordonnons l'expédition vers l'Ouganda. Les dons matériels peuvent être regroupés pour optimiser les coûts d'expédition : nous attendons parfois plusieurs dons avant d'organiser un envoi groupé. Vous serez informé du planning d'expédition. Pour les partitions dématérialisées, vous recevrez un e-mail avec les instructions pour le transfert des fichiers.",
     instruments_modal_title: 'Liste des instruments',
     instruments_modal_text:
       "Voici la liste des instruments recherchés pour compléter l'orchestre :",
     mat_title: 'Formulaire — Don matériel',
     mat_text:
-      'Remplis ce formulaire pour proposer un instrument ou des partitions. Nous te recontactons via le site.',
+      'Complétez ce formulaire pour proposer un instrument ou des partitions. L\'équipe vous recontacte via le site.',
     mat_item: 'Objet du don',
     mat_item_ph: 'Choisir…',
     mat_item_maintenance: "Matériel d'entretien",
@@ -156,7 +159,7 @@ const i18n = {
     mat_item_sheet_music: 'Partitions',
     mat_item_instruments: 'Instruments',
     mat_text_digital:
-      "<strong>Note :</strong> Pour les dons de partitions dématérialisées (fichiers PDF, liens légaux), nous t'enverrons un email après réception de ton formulaire pour organiser l'envoi.",
+      "<strong>Note :</strong> Pour les dons de partitions dématérialisées (fichiers PDF, liens légaux), vous recevrez un e-mail après réception de votre formulaire pour organiser l'envoi.",
     mat_instrument: 'Instrument (si concerné)',
     mat_instrument_ph: 'Choisir…',
     mat_brand: 'Marque',
@@ -188,7 +191,7 @@ const i18n = {
     donors_type_mat: 'Matériel',
     donors_admin_title: '(Option) Ajouter un donateur',
     donors_admin_text:
-      'Cette partie sert de démo. Plus tard, on pourra la connecter à une base de données (ou la gérer manuellement).',
+      'Cette section est fournie à titre de démonstration.',
     donors_f_name: 'Nom',
     donors_f_gift: 'Don',
     donors_f_type: 'Type',
@@ -225,7 +228,7 @@ const i18n = {
     shop_contact_btn: 'Accéder au formulaire de contact',
     gallery_title: 'Galerie',
     gallery_text:
-      "Plusieurs albums (placeholders pour l'instant). On branchera ensuite Cloudinary.",
+      'Découvrez le centre, ses activités et ses concerts en images.',
     alb_1: 'Parc instrumental',
     alb_1_description:
       'Liste des instruments présents au centre :<br>7 trombones / 4 trompettes / 5 cornets / 4 baritons / 1 euphonium / 2 tubas / 3 tenor horns / 3 snare drums / 1 bass drums',
@@ -243,7 +246,7 @@ const i18n = {
     contact_team_contact_name: '<strong>EMILIE EMPIS</strong>',
     contact_team_contact_role: "Présidente de l'association",
     contact_team_contact_desc:
-      "Merci de nous écrire : nous lisons chaque message avec attention et vous répondons avec plaisir. Votre message compte pour nous, et nous avons hâte d’échanger avec vous.",
+      'Merci de nous écrire via le formulaire : chaque message est lu avec attention et une réponse vous est apportée dans les meilleurs délais.',
     contact_note:
       "⚠️ Dans ce prototype, le formulaire essaie d'appeler une URL Google Apps Script (à remplacer dans le code).",
     form_name: 'Nom',
@@ -627,7 +630,7 @@ async function sendToGAS(formEl, statusEl, btnEl, extra = {}) {
     // Gestion des erreurs
     statusEl.textContent =
       currentLang === 'fr'
-        ? "Erreur d'envoi. Réessaie plus tard."
+        ? "Erreur d'envoi. Veuillez réessayer ultérieurement."
         : 'Send failed. Try again later.'
     statusEl.style.color = 'var(--error, #dc2626)'
   } finally {

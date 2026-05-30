@@ -2,16 +2,87 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Ancres : défilement fluide + marge pour le header sticky (top-4 + hauteur barre). */
+/* Thème clair — fond beige chaud, texte par défaut. */
 @layer base {
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 6.5rem;
+    overflow-x: clip;
+  }
+
+  body {
+    @apply text-slate-900 antialiased;
+    background-color: #faf7f2;
   }
 
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
     }
+  }
+}
+
+@layer utilities {
+  .bg-site {
+    background-color: #faf7f2;
+  }
+}
+
+/* Première section V2 : fond image fixe, couvre tout le viewport quelle que soit la résolution. */
+@layer components {
+  .hero-v2-fixed-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .hero-v2-fixed-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Section pleine largeur (ex. Aider) : image fixe viewport, rognée au scroll via clip-path sur le parent. */
+  .section-fixed-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .section-fixed-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  /* Ombres hero V2 : lisibilité du texte et des boutons sur la photo de fond. */
+  .hero-v2-text-shadow {
+    text-shadow:
+      0 2px 16px rgba(0, 0, 0, 0.7),
+      0 1px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .hero-v2-btn-shadow {
+    box-shadow:
+      0 4px 22px rgba(0, 0, 0, 0.45),
+      0 2px 8px rgba(0, 0, 0, 0.35);
+  }
+
+  .hero-v2-btn-outline-shadow {
+    box-shadow:
+      0 4px 22px rgba(0, 0, 0, 0.5),
+      0 2px 8px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.65);
   }
 }

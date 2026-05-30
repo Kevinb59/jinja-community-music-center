@@ -3,6 +3,12 @@
  */
 export const paths = {
   logo: 'images/jinja copie.png',
+  /** Fond plein écran de la première section (V2). */
+  heroBackground: 'images/V2/first-section.webp',
+  /** Fond fixe pleine largeur de la section « Aider » (V2). */
+  aiderBackground: 'images/V2/aider.webp',
+  /** Fond fixe pleine largeur de la section « Contact » (V2). */
+  contactBackground: 'images/V2/contact.webp',
   heroSide: 'images/repetition/brass1.jpg',
   founder: 'images/qui22.jpg',
   emilie: 'images/emilie2.jpg',
@@ -15,9 +21,10 @@ export const paths = {
 
 export const copy = {
   pill: 'Musique • Enfance • Jinja',
-  heroTitle: 'Un lieu culturel qui forme des musiciens.',
+  heroTitle:
+    'Chaque enfant mérite une éducation, un cadre bienveillant et la possibilité de rêver grâce à la musique.',
   heroSubtitle:
-    "Jinja Community Music Center est un espace gratuit et sécurisé où les enfants peuvent apprendre, s'exprimer et grandir grâce à la musique.",
+    "À Jinja, en Ouganda, nous soutenons un centre musical communautaire qui accueille des enfants et des jeunes en situation de précarité. Grâce à la musique, ils développent confiance en eux, discipline, esprit d'équipe et espoir pour l'avenir.",
   heroNote:
     "Aujourd'hui, ils sont 27 musiciens mais il manque des instruments : c'est la raison de notre appel aux dons.",
   countlineText: 'Musiciens à ce jour.',
@@ -39,9 +46,9 @@ export const copy = {
   teamOtherHtml: `<p><strong>Autres membres de l'association :</strong></p><p><strong>Trésorier :</strong> Alexis DEPREZ</p><p><strong>Secrétaire :</strong> Kévin BLART</p>`,
   contextTitle: 'Contexte',
   contextText1:
-    "À Jinja, beaucoup d'enfants grandissent avec des opportunités limitées : pauvreté, manque de soutien et absence d'espaces positifs.",
+    "À Jinja, de nombreuses familles vivent avec des ressources très limitées. Pour certains enfants, l'accès à l'éducation, à des activités positives ou même à une alimentation régulière peut être un défi quotidien.",
   contextText2:
-    "Le centre est une alternative concrète : un lieu simple, mais stable, où l'on apprend, où l'on se sent reconnu, et où l'on construit de la confiance.",
+    "Le centre est une alternative concrète : un lieu sûr où les enfants trouvent un cadre bienveillant, développent leurs talents musicaux et construisent peu à peu leur confiance et leur avenir.",
   musicTitle: "La musique comme outil d'avenir",
   musicText:
     "L'objectif est simple : offrir une voie d'épanouissement, de discipline, de joie, et parfois une perspective professionnelle.",
@@ -82,28 +89,65 @@ export const copy = {
   inventoryLine:
     '7 trombones / 4 trompettes / 5 cornets / 4 baritons / 1 euphonium / 2 tubas / 3 tenor horns / 3 snare drums / 1 bass drums',
   helpEyebrow: 'Aider',
-  helpTitle: 'Comment aider en trois étapes',
+  helpTitle: 'Contribuer en trois étapes',
   helpLead:
-    "Deux façons d'aider : un don financier (le plus rapide) ou un don matériel (instruments, partitions, accessoires, matériel d'entretien, pupitres).",
-  help1Title: 'Choisis ton type de don',
+    'Deux formes de soutien sont possibles : un don financier, le plus direct, ou un don matériel (instruments, partitions, accessoires, matériel d\'entretien, pupitres).',
+  help1Title: 'Choisir le type de don',
   help1Text:
-    "Financier ou matériel (instruments, partitions, accessoires, matériel d'entretien, pupitres).",
-  help2Title: 'Remplis le formulaire',
-  help2Text: 'Nous te recontactons rapidement avec les étapes suivantes.',
-  help3Title: 'On te tient au courant',
-  help3Text: 'Photos, nouvelles, avancées : transparence et suivi.',
+    'Financier ou matériel : instruments, partitions, accessoires, matériel d\'entretien, pupitres.',
+  help2Title: 'Compléter le formulaire',
+  help2Text:
+    'L\'équipe vous recontacte avec les modalités pratiques dans les meilleurs délais.',
+  help3Title: 'Suivre l\'avancement du projet',
+  help3Text:
+    'Actualités, photos et avancées : un suivi régulier et une transparence sur l\'utilisation des dons.',
   donateEyebrow: 'Donner',
   donateTitle: 'Donner',
   donateLead:
-    "Deux façons d'aider : un don financier (le plus rapide) ou un don matériel (instruments, partitions, accessoires, matériel d'entretien, pupitres).",
+    'Deux formes de soutien sont possibles : un don financier, le plus direct, ou un don matériel (instruments, partitions, accessoires, matériel d\'entretien, pupitres).',
   transparencyBtn: 'Transparence & utilisation des dons',
   donateFinTitle: 'Don financier',
   donateFinText:
     "Pour soutenir immédiatement le fonctionnement du lieu et l'achat d'instruments.",
-  donateFinBtn: 'Accéder à la page de don',
+  donateFinBtn: 'Faire un don financier',
+  donateFinModalTitle: 'Don financier',
+  donateFinModalIntro:
+    "Choisissez le mode de paiement qui vous convient. Chaque contribution soutient directement le fonctionnement du centre et l'achat d'instruments.",
+  donateFinModalStripeTitle: 'Paiement par carte (Stripe)',
+  donateFinModalStripeText:
+    'Choisissez un montant ou saisissez le vôtre, puis réglez en toute sécurité sans quitter le site.',
+  donateFinModalStripeUnavailable:
+    'Le paiement en ligne n’est pas encore configuré. Utilisez le virement bancaire ou contactez-nous.',
+  donateStripeConfigHint:
+    'Paiement carte : ajoutez VITE_STRIPE_PUBLISHABLE_KEY dans .env puis relancez npm run dev.',
+  donateStripeAmountLabel: 'Montant du don',
+  donateStripeCustomAmount: 'Autre montant (€)',
+  donateStripeNameLabel: 'Nom (facultatif)',
+  donateStripeContinue: 'Continuer vers le paiement',
+  donateStripeLoading: 'Préparation du paiement…',
+  donateStripePayBtn: 'Payer maintenant',
+  donateStripePaying: 'Paiement en cours…',
+  donateStripeBack: 'Modifier le montant',
+  donateStripeAmountError: 'Indiquez un montant d’au moins 1 €.',
+  donateStripeEmailError: 'Indiquez une adresse e-mail valide pour le reçu.',
+  donateStripePayError: 'Le paiement n’a pas pu être finalisé. Réessayez ou contactez-nous.',
+  donateStripeAmountConfirm: 'Montant :',
+  donateStripeSuccessTitle: 'Merci pour votre don',
+  donateStripeSuccessText:
+    'Votre paiement a été accepté. Un e-mail de confirmation vous sera envoyé sous peu.',
+  donateFinModalWireTitle: 'Virement bancaire',
+  donateFinModalWireText:
+    "Vous pouvez effectuer un virement sur le compte de l'association. Merci d'indiquer la référence ci-dessous.",
+  donateFinModalWireMissing:
+    "Les coordonnées bancaires complètes peuvent vous être transmises sur demande via le formulaire de contact.",
+  donateFinModalWireNotifyTitle: 'Prévenir l\'association (virement)',
+  donateFinModalWireNotifyText:
+    'Après votre virement, vous pouvez nous informer via ce formulaire (montant, date, message facultatif).',
+  donateFinModalWireSend: 'Envoyer la notification',
+  donateFinModalTransparencyLink: 'Transparence & utilisation des dons',
   donateMatTitle: 'Don matériel',
   donateMatText:
-    "Propose un instrument, des partitions, des accessoires, du matériel d'entretien ou des pupitres : remplis le formulaire ci-dessous.",
+    'Instruments, partitions, accessoires, matériel d\'entretien ou pupitres : complétez le formulaire ci-dessous pour proposer un don matériel.',
   donateMatBtn: 'Remplir le formulaire don matériel',
   donateMatList: "Voir la liste d'instruments",
   donateInfoFinTitle: 'Dons financiers',
@@ -111,12 +155,12 @@ export const copy = {
     "Les dons financiers sont transférés directement vers le compte de l'association. Nous utilisons des plateformes sécurisées pour les transferts internationaux vers l'Ouganda. Les fonds servent immédiatement au fonctionnement du centre, à l'achat d'instruments sur place, au loyer, aux charges et à la nourriture pour les enfants.",
   donateInfoMatTitle: 'Dons matériels',
   donateInfoMatText:
-    "Après réception de ton formulaire, nous te recontactons pour organiser l'envoi. Pour les instruments, accessoires, matériel d'entretien et pupitres, nous coordonnons l'expédition vers l'Ouganda. Les dons matériels peuvent être regroupés pour optimiser les coûts d'expédition. Pour les partitions dématérialisées, nous t'enverrons un email avec les instructions pour le transfert des fichiers.",
+    "Après réception de votre formulaire, l'équipe vous recontacte pour organiser l'envoi. Pour les instruments, accessoires, matériel d'entretien et pupitres, nous coordonnons l'expédition vers l'Ouganda. Les dons matériels peuvent être regroupés pour optimiser les coûts d'expédition. Pour les partitions dématérialisées, vous recevrez un e-mail avec les instructions pour le transfert des fichiers.",
   matTitle: 'Formulaire — Don matériel',
   matIntro:
-    'Remplis ce formulaire pour proposer un instrument ou des partitions. Nous te recontactons via le site.',
+    'Complétez ce formulaire pour proposer un instrument ou des partitions. L\'équipe vous recontacte via le site.',
   matDigitalNote:
-    "Pour les dons de partitions dématérialisées (fichiers PDF, liens légaux), nous t'enverrons un email après réception de ton formulaire pour organiser l'envoi.",
+    "Pour les dons de partitions dématérialisées (fichiers PDF, liens légaux), vous recevrez un e-mail après réception de votre formulaire pour organiser l'envoi.",
   creationsEyebrow: 'Nos créations',
   creationsTitle: 'Nos créations',
   creationsText:
@@ -137,8 +181,11 @@ export const copy = {
   contactName: 'EMILIE EMPIS',
   contactRole: "Présidente de l'association",
   contactDesc:
-    "Merci de nous écrire : nous lisons chaque message avec attention et vous répondons avec plaisir. Votre message compte pour nous, et nous avons hâte d’échanger avec vous.",
+    'Merci de nous écrire via le formulaire : chaque message est lu avec attention et une réponse vous est apportée dans les meilleurs délais.',
   contactFormOpenBtn: 'Ouvrir le formulaire de contact',
+  matMessagePlaceholder: 'Décrivez brièvement votre proposition de don…',
+  contactMessagePlaceholder: 'Rédigez votre message…',
+  formErrorSend: "Erreur d'envoi. Veuillez réessayer ultérieurement.",
   formSend: 'Envoyer',
   matSend: 'Envoyer la proposition',
   donorsEyebrow: 'Nos donateurs',
@@ -164,13 +211,13 @@ export const copy = {
  * Corps HTML de la modale « Transparence » (contenu autonome, thème sombre Tailwind).
  */
 export const transparencyModalBodyHtml = `
-<div class="space-y-5 text-sm leading-7 text-slate-300">
-  <div class="rounded-2xl border border-violet-400/25 bg-violet-500/10 p-5">
-    <p class="text-center font-medium text-slate-200">La confiance est au cœur de notre démarche.</p>
+<div class="space-y-5 text-sm leading-7 text-slate-600">
+  <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5">
+    <p class="text-center font-medium text-slate-800">La confiance est au cœur de notre démarche.</p>
     <p class="mt-4">L'association Jinja Community Music Center – France s'engage à utiliser chaque don de manière responsable, transparente et conforme à son objet associatif.</p>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-    <h3 class="mb-3 text-base font-semibold text-violet-200">À quoi servent les dons ?</h3>
+  <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <h3 class="mb-3 text-base font-semibold text-violet-800">À quoi servent les dons ?</h3>
     <p class="mb-4">Les dons, qu'ils soient financiers ou matériels, servent exclusivement à soutenir des actions éducatives et musicales à destination d'enfants et de jeunes, notamment à travers :</p>
     <ul class="mt-0 list-disc space-y-2 pl-5">
       <li>l'achat ou le don d'instruments de musique,</li>
@@ -181,27 +228,27 @@ export const transparencyModalBodyHtml = `
       <li>les frais de fonctionnement minimum de l'association en France (frais bancaires, site internet, impressions).</li>
     </ul>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-    <h3 class="mb-3 text-base font-semibold text-violet-200">Comment les fonds sont-ils gérés ?</h3>
-    <p class="mb-4">Les dons sont perçus uniquement sur le <strong class="font-semibold text-slate-100">compte bancaire de l'association</strong>.</p>
+  <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <h3 class="mb-3 text-base font-semibold text-violet-800">Comment les fonds sont-ils gérés ?</h3>
+    <p class="mb-4">Les dons sont perçus uniquement sur le <strong class="font-semibold text-slate-900">compte bancaire de l'association</strong>.</p>
     <p class="mb-4">Les décisions d'utilisation des fonds sont prises collectivement par le bureau, dans le respect des statuts.</p>
     <p class="m-0">Une comptabilité simple et rigoureuse est tenue, et les justificatifs de dépenses sont conservés.</p>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-    <h3 class="mb-3 text-base font-semibold text-violet-200">Les transferts vers l'étranger</h3>
+  <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <h3 class="mb-3 text-base font-semibold text-violet-800">Les transferts vers l'étranger</h3>
     <p class="mb-4">Lorsque des fonds sont transférés à l'étranger, ceux-ci le sont uniquement dans le cadre du projet éducatif et musical soutenu par l'association.</p>
     <p class="m-0">Les transferts sont tracés et réalisés de manière transparente. Des éléments de suivi (retours, photos, témoignages) permettent de s'assurer de la bonne utilisation des fonds au bénéfice des enfants et du projet.</p>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-    <h3 class="mb-3 text-base font-semibold text-violet-200">Les dons matériels</h3>
+  <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <h3 class="mb-3 text-base font-semibold text-violet-800">Les dons matériels</h3>
     <p class="mb-4">L'association accepte également des dons matériels (instruments, partitions, accessoires, matériel pédagogique).</p>
     <p class="m-0">Ces dons sont utilisés directement dans le cadre des activités musicales et éducatives ou envoyés au centre communautaire lorsqu'ils sont adaptés aux besoins.</p>
   </div>
-  <div class="rounded-2xl border border-violet-400/25 bg-violet-500/10 p-5">
-    <h3 class="mb-3 text-base font-semibold text-violet-200">Notre engagement</h3>
+  <div class="rounded-2xl border border-violet-200 bg-violet-50 p-5">
+    <h3 class="mb-3 text-base font-semibold text-violet-800">Notre engagement</h3>
     <p class="mb-4">L'association agit dans un cadre strictement non lucratif.</p>
     <p class="mb-4">Aucune rémunération n'est versée aux membres du bureau, et aucun don n'est utilisé à des fins personnelles ou commerciales.</p>
-    <p class="m-0 font-medium text-slate-200">Chaque contribution, quelle que soit sa nature, participe à offrir aux enfants un cadre d'apprentissage, de protection et d'épanouissement par la musique.</p>
+    <p class="m-0 font-medium text-slate-800">Chaque contribution, quelle que soit sa nature, participe à offrir aux enfants un cadre d'apprentissage, de protection et d'épanouissement par la musique.</p>
   </div>
 </div>
 `.trim()
@@ -210,13 +257,13 @@ export const transparencyModalBodyHtml = `
 export const LEGAL_CONTACT_EMAIL = 'jinja.community.music.center@gmail.com'
 
 /**
- * Corps HTML modale « Mentions légales » (aligné sur mentions-legales.html, thème sombre).
+ * Corps HTML modale « Mentions légales » (aligné sur mentions-legales.html, thème clair).
  */
 export const legalModalBodyHtml = `
-<div class="space-y-5 text-sm leading-7 text-slate-300">
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-    <h3 class="mb-4 text-base font-semibold text-emerald-200">Association</h3>
-    <p class="mb-4 font-medium text-white">Jinja Community Music Center – France</p>
+<div class="space-y-5 text-sm leading-7 text-slate-600">
+  <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <h3 class="mb-4 text-base font-semibold text-emerald-800">Association</h3>
+    <p class="mb-4 font-medium text-slate-900">Jinja Community Music Center – France</p>
     <div class="mb-4">
       <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Statut juridique</p>
       <p class="m-0">Association loi 1901</p>
@@ -232,32 +279,32 @@ export const legalModalBodyHtml = `
     <div class="m-0">
       <p class="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500">Contact</p>
       <p class="m-0">
-        <a href="mailto:${LEGAL_CONTACT_EMAIL}" class="font-medium text-emerald-300 underline decoration-emerald-400/40 hover:text-emerald-200">${LEGAL_CONTACT_EMAIL}</a>
+        <a href="mailto:${LEGAL_CONTACT_EMAIL}" class="font-medium text-emerald-600 underline decoration-emerald-400/40 hover:text-emerald-700">${LEGAL_CONTACT_EMAIL}</a>
       </p>
     </div>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-    <h3 class="mb-3 text-base font-semibold text-emerald-200">Hébergement du site</h3>
-    <p class="mb-2 m-0"><strong class="text-slate-200">Nom de l'hébergeur :</strong> IONOS</p>
-    <p class="m-0"><strong class="text-slate-200">Pays :</strong> FRANCE</p>
+  <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <h3 class="mb-3 text-base font-semibold text-emerald-800">Hébergement du site</h3>
+    <p class="mb-2 m-0"><strong class="text-slate-800">Nom de l'hébergeur :</strong> IONOS</p>
+    <p class="m-0"><strong class="text-slate-800">Pays :</strong> FRANCE</p>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-    <h3 class="mb-3 text-base font-semibold text-emerald-200">Propriété intellectuelle</h3>
+  <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <h3 class="mb-3 text-base font-semibold text-emerald-800">Propriété intellectuelle</h3>
     <p class="mb-4">L'ensemble des contenus présents sur ce site (textes, images, photographies, logos, vidéos, documents) est la propriété exclusive de l'association Jinja Community Music Center – France, sauf mention contraire.</p>
     <p class="m-0">Toute reproduction, représentation ou diffusion, totale ou partielle, sans autorisation préalable est interdite.</p>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-    <h3 class="mb-3 text-base font-semibold text-emerald-200">Responsabilité</h3>
+  <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <h3 class="mb-3 text-base font-semibold text-emerald-800">Responsabilité</h3>
     <p class="mb-4">L'association s'efforce de fournir des informations aussi précises que possible.</p>
     <p class="m-0">Toutefois, elle ne saurait être tenue responsable des omissions, inexactitudes ou carences dans la mise à jour du contenu.</p>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-    <h3 class="mb-3 text-base font-semibold text-emerald-200">Données personnelles</h3>
+  <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <h3 class="mb-3 text-base font-semibold text-emerald-800">Données personnelles</h3>
     <p class="mb-4">Les informations éventuellement recueillies via les formulaires du site sont destinées exclusivement à l'association Jinja Community Music Center – France et ne sont en aucun cas transmises à des tiers.</p>
     <p class="m-0">Conformément à la réglementation en vigueur, vous disposez d'un droit d'accès, de rectification et de suppression des données vous concernant en adressant votre demande à l'adresse de contact indiquée ci-dessus.</p>
   </div>
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
-    <h3 class="mb-3 text-base font-semibold text-emerald-200">Absence de numéro SIRET</h3>
+  <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+    <h3 class="mb-3 text-base font-semibold text-emerald-800">Absence de numéro SIRET</h3>
     <p class="m-0">L'association Jinja Community Music Center – France n'est pas tenue de disposer d'un numéro SIRET à ce stade de son activité.</p>
   </div>
 </div>

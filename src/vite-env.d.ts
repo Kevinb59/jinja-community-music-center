@@ -8,6 +8,9 @@ interface ImportMetaEnv {
   readonly GAS_URL_CONTACT: string
   readonly GAS_URL_MATERIAL: string
   readonly VITE_DONATION_URL?: string
+  readonly VITE_STRIPE_PUBLISHABLE_KEY?: string
+  readonly VITE_DONATION_IBAN?: string
+  readonly VITE_DONATION_BIC?: string
   readonly VITE_GAS_CONTACT_URL?: string
   readonly VITE_GAS_MATERIAL_URL?: string
 }

@@ -8,6 +8,27 @@ export const BRAND_NAME = "PROJET JINJA COMMUNITY MUSIC CENTER - FRANCE"
 export const DONATION_PAGE_URL =
   import.meta.env.VITE_DONATION_URL ?? 'https://example.com/donation'
 
+/** Clé publique Stripe (Payment Element dans la modale don). */
+export const STRIPE_PUBLISHABLE_KEY =
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? ''
+
+/** Montants suggérés (€) dans la modale don. */
+export const DONATION_SUGGESTED_AMOUNTS = [25, 50, 100]
+
+/** Coordonnées bancaires (virement) — renseigner via VITE_DONATION_IBAN / VITE_DONATION_BIC. */
+export const DONATION_BANK_DETAILS = {
+  beneficiary: 'Jinja Community Music Center – France',
+  iban: import.meta.env.VITE_DONATION_IBAN ?? '',
+  bic: import.meta.env.VITE_DONATION_BIC ?? '',
+  reference: 'Don Jinja CMF'
+}
+
+/** true si le paiement Stripe intégré est configuré (clé publique présente). */
+export function isStripePaymentConfigured() {
+  const key = String(STRIPE_PUBLISHABLE_KEY || '').trim()
+  return key.startsWith('pk_test_') || key.startsWith('pk_live_')
+}
+
 const DEFAULT_GAS = 'https://script.google.com/macros/s/XXXXX/exec'
 
 export const GAS_CONTACT_URL =

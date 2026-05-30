@@ -28,3 +28,16 @@ export async function submitToGas(formType, params) {
   const url = `${base}?${params.toString()}`
   await fetch(url, { method: 'GET', mode: 'no-cors' })
 }
+
+/**
+ * Après paiement Stripe réussi : même mécanisme que contact/virement (GET → GAS).
+ * GAS vérifie le payment_id auprès de Stripe avant d’envoyer les e-mails.
+ * @param {{ paymentId: string }} payload
+ */
+export async function notifyStripeDonation({ paymentId }) {
+  const params = new URLSearchParams({
+    type: 'stripe_donation',
+    payment_id: String(paymentId || '')
+  })
+  await submitToGas('contact', params)
+}

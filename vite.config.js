@@ -19,7 +19,10 @@ function gasEnvDefine(mode) {
     env.GAS_URL_MATERIAL || env.VITE_GAS_MATERIAL_URL || ''
   return {
     'import.meta.env.GAS_URL_CONTACT': JSON.stringify(contact),
-    'import.meta.env.GAS_URL_MATERIAL': JSON.stringify(material)
+    'import.meta.env.GAS_URL_MATERIAL': JSON.stringify(material),
+    'import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY': JSON.stringify(
+      env.VITE_STRIPE_PUBLISHABLE_KEY || ''
+    )
   }
 }
 // Racine du dépôt : le projet Vite vit à la racine ; `images/` reste à côté de ce fichier.
@@ -100,7 +103,56 @@ function copySiteImagesToDist() {
   }
 }
 
+/**
+ * Dev local : routes /api/stripe/* (même logique que les fonctions Vercel).
+ * Nécessite STRIPE_SECRET_KEY et STRIPE_WEBHOOK_SECRET dans .env.
+ */
+function stripeDevApi(mode) {
+  return {
+    name: 'stripe-dev-api',
+    configureServer(server) {
+      server.middlewares.use(async (req, res, next) => {
+        const url = req.url?.split('?')[0]
+        if (req.method !== 'POST' || !url?.startsWith('/api/stripe/')) {
+          return next()
+        }
+
+        const chunks = []
+        req.on('data', (c) => chunks.push(c))
+        req.on('end', async () => {
+          const raw = Buffer.concat(chunks)
+          try {
+            if (url === '/api/stripe/create-payment-intent') {
+              const { createPaymentIntent } = await import(
+                './server/stripe/create-payment-intent.mjs'
+              )
+              const body = JSON.parse(raw.toString('utf8') || '{}')
+              const result = await createPaymentIntent(body)
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify(result))
+              return
+            }
+            if (url === '/api/stripe/webhook') {
+              const { handleStripeWebhook } = await import('./server/stripe/webhook.mjs')
+              const result = await handleStripeWebhook(raw, req.headers['stripe-signature'])
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify(result))
+              return
+            }
+            next()
+          } catch (err) {
+            const status = err.statusCode || 500
+            res.statusCode = status
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ error: err.message || 'Erreur serveur' }))
+          }
+        })
+      })
+    }
+  }
+}
+
 export default defineConfig(({ mode }) => ({
   define: gasEnvDefine(mode),
-  plugins: [react(), legacyDevAssets(), copySiteImagesToDist()]
+  plugins: [react(), legacyDevAssets(), copySiteImagesToDist(), stripeDevApi(mode)]
 }))
