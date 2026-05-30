@@ -266,6 +266,7 @@ export const legalModalBodyHtml = `
 /** Noms de pays (FR) — `aria-label` du drapeau (`public/flags/{iso}.svg`, voir DonorFlagIcon dans App.jsx). */
 export const DONOR_COUNTRY_LABELS = {
   BE: 'Belgique',
+  FR: 'France',
   US: 'États-Unis',
   DE: 'Allemagne'
 }
@@ -276,6 +277,7 @@ export const DONOR_COUNTRY_LABELS = {
  * Ordre du tableau : du don le plus récent au plus ancien (affichage tel quel dans App.jsx).
  */
 export const DONORS_DEMO = [
+  { name: 'Martine Delmas', gift: '100 €', type: 'financial', date: 'Mai 2026', country: 'FR' },
   { name: 'Francesco Giovacchini', gift: '25 $', type: 'financial', date: 'Mars 2026', country: 'DE' },
   { name: 'Conor Chapman', gift: '100 $', type: 'financial', date: 'Févr. 2026', country: 'US' },
   { name: 'John Lucas', gift: '25 $', type: 'financial', date: 'Févr. 2026', country: 'US' },
