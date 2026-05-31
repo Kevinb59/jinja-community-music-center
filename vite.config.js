@@ -27,7 +27,7 @@ function gasEnvDefine(mode) {
 }
 
 /**
- * Injecte les URLs absolues og:image / og:url au build (VITE_SITE_URL ou VERCEL_URL).
+ * Injecte les URLs absolues og:image / og:url au build (VITE_SITE_URL ou domaine canonique).
  */
 function injectSocialMeta(mode) {
   return {
@@ -35,11 +35,10 @@ function injectSocialMeta(mode) {
     transformIndexHtml(html) {
       const env = loadEnv(mode, process.cwd(), '')
       const siteUrl = (
-        env.VITE_SITE_URL ||
-        (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : '')
+        env.VITE_SITE_URL || 'https://jinja-music-center.com'
       ).replace(/\/$/, '')
-      const ogImage = siteUrl ? `${siteUrl}/og-image.jpg` : '/og-image.jpg'
-      const ogUrl = siteUrl ? `${siteUrl}/` : '/'
+      const ogImage = `${siteUrl}/og-image.jpg`
+      const ogUrl = `${siteUrl}/`
       return html.replaceAll('__OG_IMAGE__', ogImage).replaceAll('__OG_URL__', ogUrl)
     }
   }
