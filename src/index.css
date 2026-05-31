@@ -26,6 +26,22 @@
   .bg-site {
     background-color: #faf7f2;
   }
+
+  /* Crédit pied de page Moriarty : « Site par » (police site) + nom (Engagement, +50 %). */
+  .footer-moriarty-credit .moriarty-vcard-name {
+    font-family: 'Engagement', cursive;
+    font-size: 1.5em;
+    line-height: 1;
+    vertical-align: -0.06em;
+    color: rgb(5 150 105);
+    text-decoration: none;
+  }
+
+  .footer-moriarty-credit .moriarty-vcard-name:hover {
+    color: rgb(4 120 87);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
 
 /* Première section V2 : fond image fixe, couvre tout le viewport quelle que soit la résolution. */

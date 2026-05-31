@@ -1,7 +1,6 @@
 /**
- * Page refonte Jinja Community Music Center — contenu aligné sur index.html + script.js (FR).
+ * Application React — Jinja Community Music Center (France).
  * Images : préfixe /images/ (dossier `images/` à la racine ; copié dans dist au build, servi en dev par vite.config.js).
- * Page boutique : fichier dans `public/` (URL racine, ex. /boutique.html).
  */
 import React, { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import {
@@ -30,18 +29,11 @@ import { submitToGas } from './gasSubmit'
 import {
   BRAND_NAME,
   DONATION_BANK_DETAILS,
-  legacyPage,
   SHOP_OPEN
 } from './siteConfig'
-import {
-  copy,
-  DONOR_COUNTRY_LABELS,
-  DONORS_DEMO,
-  INSTRUMENTS_NEEDED,
-  legalModalBodyHtml,
-  paths,
-  transparencyModalBodyHtml
-} from './siteCopy'
+import LocaleSuggestBanner from './components/LocaleSuggestBanner.jsx'
+import { paths } from './i18n/paths.js'
+import { useLocale } from './i18n/LocaleContext.jsx'
 
 /**
  * Retour à la ligne du slogan officiel après le mot « COMMUNITY » (ligne 1 + ligne 2 dans le menu).
@@ -61,51 +53,6 @@ function splitBrandAfterCommunity(brandName) {
 }
 
 const BRAND_SLOGAN_LINES = splitBrandAfterCommunity(BRAND_NAME)
-
-const GALLERY_TABS = [
-  { key: 'concert', label: 'Concert' },
-  { key: 'centre', label: 'Parc instrumental' },
-  { key: 'vie', label: 'Vie' },
-  { key: 'repetition', label: 'Répétition' },
-  { key: 'creations', label: 'Créations' },
-  { key: 'don', label: 'Don' }
-]
-
-const NAV_LINKS = [
-  { label: 'Le projet', href: '#projet' },
-  { label: 'Nos besoins', href: '#besoins' },
-  { label: 'Aider', href: '#aider' },
-  { label: 'Donner', href: '#don' },
-  { label: 'Nos créations', href: '#creations' },
-  { label: 'Galerie', href: '#galerie' },
-  { label: 'Contact', href: '#contact' },
-  { label: 'Nos donateurs', href: '#donateurs' }
-]
-
-/** ids des sections alignés sur NAV_LINKS (scroll spy + ancres). */
-const NAV_TARGET_IDS = NAV_LINKS.map((item) => item.href.replace(/^#/, ''))
-
-const values = [
-  {
-    icon: Music2,
-    accent: 'emerald',
-    title: copy.musicTitle,
-    text: copy.musicText
-  },
-  {
-    icon: Shield,
-    accent: 'sky',
-    title: 'Un lieu gratuit et sécurisé',
-    text: copy.contextText1 + ' ' + copy.contextText2
-  },
-  {
-    icon: House,
-    accent: 'amber',
-    title: 'Accueil au quotidien',
-    text:
-      "Pour de nombreux enfants, le centre est bien plus qu'un lieu d'apprentissage musical. C'est un espace de vie où ils trouvent une présence bienveillante, un accompagnement quotidien et, lorsque les moyens le permettent, des repas et une aide concrète face aux difficultés rencontrées par leurs familles."
-  }
-]
 
 function cn(...classes) {
   return classes.filter(Boolean).join(' ')
@@ -135,6 +82,41 @@ function CardIconBox({ accent = 'emerald', className = '', children }) {
 
 function cardIconClass(accent = 'emerald') {
   return CARD_ICON_ACCENTS[accent]?.icon ?? CARD_ICON_ACCENTS.emerald.icon
+}
+
+/**
+ * Sélecteur FR | EN — persistance via LocaleContext (localStorage).
+ */
+function LocaleSwitch({ className = '', buttonStyle }) {
+  const { locale, setLocale, copy } = useLocale()
+  return (
+    <div
+      className={cn('flex items-center gap-1 rounded-full border border-slate-200/80 p-0.5', className)}
+      role="group"
+      aria-label={copy.aria.localeSwitch}
+    >
+      <span className="sr-only">{copy.localeSwitchLabel}</span>
+      {(['fr', 'en']).map((code) => {
+        const active = locale === code
+        const label = code === 'fr' ? copy.localeSwitchFr : copy.localeSwitchEn
+        return (
+          <button
+            key={code}
+            type="button"
+            onClick={() => setLocale(code)}
+            aria-pressed={active}
+            className={cn(
+              'min-w-[2.25rem] rounded-full px-2 py-1 text-xs font-semibold transition',
+              active ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100'
+            )}
+            style={active ? undefined : buttonStyle}
+          >
+            {label}
+          </button>
+        )
+      })}
+    </div>
+  )
 }
 
 /**
@@ -233,11 +215,12 @@ function SectionFixedBackground({ src }) {
  * Section « Aider » : fond fixe aider.webp pleine largeur, voile sombre, cartes blanches par-dessus.
  */
 function HelpSection() {
+  const { copy } = useLocale()
   return (
     <section
       id="aider"
       className="relative w-full scroll-mt-24 py-14 md:py-20 [clip-path:inset(0)]"
-      aria-label="Comment aider"
+      aria-label={copy.aria.helpSection}
     >
       {/* Purpose: calque image fixe — même logique que le hero, rogné à cette section. */}
       <SectionFixedBackground src={paths.aiderBackground} />
@@ -282,11 +265,12 @@ function HelpSection() {
  * onOpenContact : ouvre la modale formulaire.
  */
 function ContactSection({ onOpenContact }) {
+  const { copy } = useLocale()
   return (
     <section
       id="contact"
       className="relative w-full scroll-mt-24 py-14 md:py-20 [clip-path:inset(0)]"
-      aria-label="Contact"
+      aria-label={copy.aria.contact}
     >
       {/* Purpose: calque image fixe — même logique que Aider, rogné à cette section. */}
       <SectionFixedBackground src={paths.contactBackground} />
@@ -431,6 +415,7 @@ function SectionTitle({ eyebrow, title, text, onDark = false }) {
 }
 
 function VisualPlaceholder({ label, tall = false, preserveAspect = false }) {
+  const { copy } = useLocale()
   return (
     <div
       className={cn(
@@ -442,14 +427,11 @@ function VisualPlaceholder({ label, tall = false, preserveAspect = false }) {
       <div className="relative flex h-full min-h-[inherit] flex-col justify-between p-6">
         <div className="flex items-center gap-2 text-slate-500">
           <ImageIcon className="h-5 w-5" />
-          <span className="text-sm">Image indisponible</span>
+          <span className="text-sm">{copy.imageUnavailable}</span>
         </div>
         <div>
           <p className="text-lg font-medium text-slate-900">{label}</p>
-          <p className="mt-2 max-w-sm text-sm leading-6 text-slate-600">
-            Ajoutez le fichier dans le dossier <code className="text-slate-500">images/</code> du
-            projet pour l’afficher ici en mode développement.
-          </p>
+          <p className="mt-2 max-w-sm text-sm leading-6 text-slate-600">{copy.imageMissingHint}</p>
         </div>
       </div>
     </div>
@@ -461,10 +443,11 @@ function VisualPlaceholder({ label, tall = false, preserveAspect = false }) {
  * preserveAspect : pas de hauteur min ni recadrage — le cadre suit le ratio naturel (ex. hero brass1.jpg).
  */
 function SiteImage({ src, alt, tall = false, preserveAspect = false, className = '' }) {
+  const { copy } = useLocale()
   const [failed, setFailed] = useState(false)
   if (!src || failed) {
     return (
-      <VisualPlaceholder label={alt || 'Photo'} tall={tall && !preserveAspect} preserveAspect={preserveAspect} />
+      <VisualPlaceholder label={alt || copy.aria.photo} tall={tall && !preserveAspect} preserveAspect={preserveAspect} />
     )
   }
   if (preserveAspect) {
@@ -504,6 +487,7 @@ function SiteImage({ src, alt, tall = false, preserveAspect = false, className =
  * type : 'video' → balise video en miniature ; sinon img. failed : média illisible.
  */
 function GalleryThumb({ src, alt, type = 'image', onPick }) {
+  const { copy } = useLocale()
   const [failed, setFailed] = useState(false)
   const isVideo = type === 'video'
   if (!src || failed) {
@@ -513,7 +497,7 @@ function GalleryThumb({ src, alt, type = 'image', onPick }) {
         aria-hidden
       >
         <ImageIcon className="h-6 w-6 text-slate-500" />
-        <span className="text-[11px] leading-tight text-slate-500">Indisponible</span>
+        <span className="text-[11px] leading-tight text-slate-500">{copy.flagUnavailable}</span>
       </div>
     )
   }
@@ -540,12 +524,12 @@ function GalleryThumb({ src, alt, type = 'image', onPick }) {
           >
             <Play className="h-10 w-10 text-white drop-shadow-md" strokeWidth={1.5} />
           </span>
-          <span className="sr-only">{alt || 'Vidéo'}</span>
+          <span className="sr-only">{alt || copy.aria.video}</span>
         </>
       ) : (
         <img
           src={assetUrl(src)}
-          alt={alt || 'Galerie'}
+          alt={alt || copy.aria.galleryMedia}
           className="h-full w-full object-cover transition group-hover:opacity-90"
           loading="lazy"
           onError={() => setFailed(true)}
@@ -560,6 +544,7 @@ function GalleryThumb({ src, alt, type = 'image', onPick }) {
  * videoRef : pause au changement d’index ou à la fermeture pour éviter lecture en arrière-plan.
  */
 function GalleryLightbox({ open, images, index, onClose, onNavigate }) {
+  const { copy } = useLocale()
   const touchStartRef = useRef(null)
   const skipClickRef = useRef(false)
   const videoRef = useRef(null)
@@ -593,7 +578,7 @@ function GalleryLightbox({ open, images, index, onClose, onNavigate }) {
   if (!open || !current || total === 0) return null
 
   const src = current.src
-  const alt = current.alt || 'Galerie'
+  const alt = current.alt || copy.aria.galleryMedia
   const isVideo =
     current.type === 'video' || /\.(mp4|webm|ogg)$/i.test(String(current.src || ''))
 
@@ -672,7 +657,8 @@ function GalleryLightbox({ open, images, index, onClose, onNavigate }) {
  * Variables : code ISO2 ; libellé accessibilité depuis DONOR_COUNTRY_LABELS.
  */
 function DonorFlagIcon({ code }) {
-  const label = DONOR_COUNTRY_LABELS[code]
+  const { messages } = useLocale()
+  const label = messages.DONOR_COUNTRY_LABELS[code]
   if (!code || !label) return null
   const iso = String(code).toLowerCase()
   return (
@@ -707,6 +693,7 @@ function ProjectImageTile({
   isActive = true,
   onExpandedChange
 }) {
+  const { copy } = useLocale()
   const [expanded, setExpanded] = useState(false)
   const [imgFailed, setImgFailed] = useState(false)
   const safeImages = (images || []).filter(Boolean)
@@ -821,32 +808,32 @@ function ProjectImageTile({
 }
 
 /** Contenu des 6 tuiles « Le projet » pour le carrousel. */
-function buildProjectTiles() {
+function buildProjectTiles(copy) {
   return [
     {
       focusImageTop: true,
       images: [paths.founder],
       title: copy.whoTitle,
-      imageAlts: ['Bwiire JohnBosco — fondateur'],
+      imageAlts: [copy.projectAlts.founder],
       content: <div dangerouslySetInnerHTML={{ __html: copy.whoHtml }} />
     },
     {
       focusImageTop: true,
       images: [paths.emilie],
       title: copy.teamTitle,
-      imageAlts: ['Emilie Empis'],
+      imageAlts: [copy.projectAlts.emilie],
       content: <div dangerouslySetInnerHTML={{ __html: copy.teamHtml }} />
     },
     {
       images: [paths.equipe],
       title: copy.teamOtherTitle,
-      imageAlts: ["Équipe — autres membres de l'association"],
+      imageAlts: [copy.projectAlts.team],
       content: <div dangerouslySetInnerHTML={{ __html: copy.teamOtherHtml }} />
     },
     {
       images: [paths.context],
       title: copy.contextTitle,
-      imageAlts: ['Contexte à Jinja'],
+      imageAlts: [copy.projectAlts.context],
       content: (
         <div className="space-y-4">
           <p>{copy.contextText1}</p>
@@ -857,7 +844,7 @@ function buildProjectTiles() {
     {
       images: [paths.avenir],
       title: copy.musicTitle,
-      imageAlts: ["La musique comme outil d'avenir"],
+      imageAlts: [copy.projectAlts.music],
       content: (
         <>
           <p>{copy.musicText}</p>
@@ -873,7 +860,7 @@ function buildProjectTiles() {
       id: 'vie',
       images: [paths.vieDaily],
       title: copy.dayTitle,
-      imageAlts: ['Vie quotidienne au centre'],
+      imageAlts: [copy.projectAlts.daily],
       content: (
         <div
           className="[&_a]:font-medium [&_a]:text-emerald-600 [&_a]:underline"
@@ -889,7 +876,8 @@ function buildProjectTiles() {
  * Variables : activeIndex (slide courante), tiles (liste des 6 contenus), reduceMotion (accessibilité).
  */
 function ProjectTilesCarousel() {
-  const tiles = useMemo(() => buildProjectTiles(), [])
+  const { copy } = useLocale()
+  const tiles = useMemo(() => buildProjectTiles(copy), [copy])
   const [activeIndex, setActiveIndex] = useState(0)
   const [isTileExpanded, setIsTileExpanded] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
@@ -930,7 +918,7 @@ function ProjectTilesCarousel() {
   }, [activeIndex, goTo, isTileExpanded, reduceMotion])
 
   return (
-    <div className="relative mt-10" aria-roledescription="carousel" aria-label="Le projet — diapositives">
+    <div className="relative mt-10" aria-roledescription="carousel" aria-label={copy.aria.carousel}>
       {/* Purpose: overflow hidden + rail translateX = effet de défilement horizontal entre cartes. */}
       <div className="relative mx-auto max-w-sm overflow-hidden sm:max-w-md md:max-w-xl lg:max-w-2xl">
         <div
@@ -961,7 +949,7 @@ function ProjectTilesCarousel() {
           type="button"
           onClick={() => goTo(activeIndex - 1)}
           className="absolute -left-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-700 shadow-md transition hover:bg-white sm:-left-4 md:h-11 md:w-11 lg:-left-14"
-          aria-label="Tuile précédente"
+          aria-label={copy.aria.carouselPrev}
         >
           <ChevronLeft className="h-5 w-5" strokeWidth={2} />
         </button>
@@ -969,7 +957,7 @@ function ProjectTilesCarousel() {
           type="button"
           onClick={() => goTo(activeIndex + 1)}
           className="absolute -right-2 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-200 bg-white/95 text-slate-700 shadow-md transition hover:bg-white sm:-right-4 md:h-11 md:w-11 lg:-right-14"
-          aria-label="Tuile suivante"
+          aria-label={copy.aria.carouselNext}
         >
           <ChevronRight className="h-5 w-5" strokeWidth={2} />
         </button>
@@ -977,7 +965,7 @@ function ProjectTilesCarousel() {
 
       {/* Pastilles + compteur */}
       <div className="mt-4 flex flex-col items-center gap-3">
-        <div className="flex flex-wrap justify-center gap-2" role="tablist" aria-label="Choisir une tuile">
+        <div className="flex flex-wrap justify-center gap-2" role="tablist" aria-label={copy.aria.carouselDots}>
           {tiles.map((tile, i) => (
             <button
               key={tile.title}
@@ -1005,6 +993,7 @@ function ProjectTilesCarousel() {
  * Localisation : carte OpenStreetMap en fond pleine largeur ; texte en panneau par-dessus.
  */
 function ProjectLocationTile({ className = '' }) {
+  const { copy } = useLocale()
   return (
     <div
       className={cn(
@@ -1014,7 +1003,7 @@ function ProjectLocationTile({ className = '' }) {
     >
       {/* Carte : calque de fond sur toute la section. */}
       <iframe
-        title="Carte OpenStreetMap — Jinja"
+        title={copy.aria.mapTitle}
         src={copy.mapIframeSrc}
         className="absolute inset-0 h-full w-full border-0"
         loading="lazy"
@@ -1033,10 +1022,7 @@ function ProjectLocationTile({ className = '' }) {
             <MapPin className={cn('h-5 w-5 shrink-0', cardIconClass('rose'))} />
             {copy.locationTitle}
           </h3>
-          <p className="mt-4 text-sm leading-7 text-slate-600">
-            Le centre se trouve à <strong className="text-slate-900">Jinja, en Ouganda</strong>, une ville
-            située à la source du Nil.
-          </p>
+          <p className="mt-4 text-sm leading-7 text-slate-600">{copy.locationText}</p>
           <a
             href={copy.mapLinkHref}
             target="_blank"
@@ -1074,6 +1060,7 @@ function AccordionItem({ title, children, isOpen, onClick }) {
  * wide : formulaires sur deux colonnes en largeur max plus grande.
  */
 function ModalPanel({ open, onClose, title, wide, children }) {
+  const { copy } = useLocale()
   const titleId = useId()
   if (!open) return null
   return (
@@ -1081,7 +1068,7 @@ function ModalPanel({ open, onClose, title, wide, children }) {
       <button
         type="button"
         className="absolute inset-0 bg-black/65 backdrop-blur-sm"
-        aria-label="Fermer la fenêtre"
+        aria-label={copy.aria.closeModal}
         onClick={onClose}
       />
       {/* Colonne scrollable : wrapper sans pointer-events pour que le clic sur le fond ferme ; seule la carte capte les clics. */}
@@ -1101,7 +1088,7 @@ function ModalPanel({ open, onClose, title, wide, children }) {
               type="button"
               onClick={onClose}
               className="shrink-0 rounded-full p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
-              aria-label="Fermer"
+              aria-label={copy.aria.closeShort}
             >
               <X className="h-5 w-5" />
             </button>
@@ -1114,15 +1101,53 @@ function ModalPanel({ open, onClose, title, wide, children }) {
 }
 
 /** Texte descriptif par album : affiché sous le titre « Galerie » ; chaîne vide = rien. */
-function albumBlurb(tabKey) {
+function albumBlurb(tabKey, copy) {
   if (tabKey === 'concert') return copy.galleryConcertDesc
   if (tabKey === 'centre') {
-    return `Liste des instruments présents au centre : ${copy.inventoryLine.replace(/\s*\/\s*/g, ' · ')}`
+    return `${copy.galleryCentreDescPrefix} ${copy.inventoryLine.replace(/\s*\/\s*/g, ' · ')}`
   }
   return ''
 }
 
 export default function App() {
+  const { locale, setLocale, copy, messages } = useLocale()
+  const {
+    transparencyModalBodyHtml,
+    legalModalBodyHtml,
+    DONOR_COUNTRY_LABELS,
+    DONORS_DEMO,
+    INSTRUMENTS_NEEDED
+  } = messages
+
+  const navTargetIds = useMemo(
+    () => copy.navLinks.map((item) => item.href.replace(/^#/, '')),
+    [copy]
+  )
+
+  const values = useMemo(
+    () => [
+      {
+        icon: Music2,
+        accent: 'emerald',
+        title: copy.musicTitle,
+        text: copy.musicText
+      },
+      {
+        icon: Shield,
+        accent: 'sky',
+        title: copy.valuesSecureTitle,
+        text: copy.contextText1 + ' ' + copy.contextText2
+      },
+      {
+        icon: House,
+        accent: 'amber',
+        title: copy.valuesDailyTitle,
+        text: copy.valuesDailyText
+      }
+    ],
+    [copy]
+  )
+
   const [logoFailed, setLogoFailed] = useState(false)
   const [activeTab, setActiveTab] = useState('concert')
   const [openAccordion, setOpenAccordion] = useState('finance')
@@ -1147,6 +1172,8 @@ export default function App() {
   const heroSectionRef = useRef(null)
   /** Index de la photo ouverte en plein écran dans l’album courant ; null si fermé. */
   const [galleryLightboxIndex, setGalleryLightboxIndex] = useState(null)
+  /** Encart « passer en anglais » : décale le header fixe quand visible. */
+  const [langBannerVisible, setLangBannerVisible] = useState(false)
 
   // Changer d’album ferme le lightbox pour éviter un index hors plage.
   useEffect(() => {
@@ -1250,7 +1277,7 @@ export default function App() {
       rafId = 0
       const y = window.scrollY + ACTIVATION_OFFSET
       let active = ''
-      for (const id of NAV_TARGET_IDS) {
+      for (const id of navTargetIds) {
         const el = document.getElementById(id)
         if (!el) continue
         const docTop = el.getBoundingClientRect().top + window.scrollY
@@ -1270,9 +1297,7 @@ export default function App() {
       window.removeEventListener('resize', onScrollOrResize)
       if (rafId) window.cancelAnimationFrame(rafId)
     }
-  }, [])
-
-  // Purpose: progresser le fond/contour du header de transparent à opaque pendant le scroll dans la 1re section.
+  }, [navTargetIds])
   // Variables : heroSectionRef (hauteur section #top), scrollY → ratio clampé [0, 1].
   useEffect(() => {
     let rafId = 0
@@ -1373,13 +1398,13 @@ export default function App() {
     params.append('subject', fd.get('subject') || '')
     params.append('message', fd.get('message') || '')
     setContactBusy(true)
-    setContactStatus('Envoi…')
+    setContactStatus(copy.formStatusSending)
     try {
       await submitToGas('contact', params)
       form.reset()
-      setContactStatus('Message envoyé ✅')
+      setContactStatus(copy.formStatusContactSuccess)
     } catch {
-      setContactStatus("Erreur d'envoi. Veuillez réessayer ultérieurement.")
+      setContactStatus(copy.formErrorSend)
     } finally {
       setContactBusy(false)
       setTimeout(() => setContactStatus(''), 6000)
@@ -1393,7 +1418,7 @@ export default function App() {
     const params = new URLSearchParams()
     params.append('name', fd.get('name') || '')
     params.append('email', fd.get('email') || '')
-    params.append('subject', 'Don matériel')
+    params.append('subject', copy.gasSubjectMaterial)
     params.append('message', fd.get('message') || '')
     params.append('item', fd.get('item') || '')
     params.append('instrument', fd.get('instrument') || '')
@@ -1404,13 +1429,13 @@ export default function App() {
     params.append('location', fd.get('location') || '')
     params.append('photo', '')
     setMatBusy(true)
-    setMatStatus('Envoi…')
+    setMatStatus(copy.formStatusSending)
     try {
       await submitToGas('material', params)
       form.reset()
-      setMatStatus('Proposition envoyée ✅')
+      setMatStatus(copy.formStatusMatSuccess)
     } catch {
-      setMatStatus("Erreur d'envoi. Veuillez réessayer ultérieurement.")
+      setMatStatus(copy.formErrorSend)
     } finally {
       setMatBusy(false)
       setTimeout(() => setMatStatus(''), 6000)
@@ -1434,14 +1459,14 @@ export default function App() {
     const params = new URLSearchParams()
     params.append('name', fd.get('name') || '')
     params.append('email', fd.get('email') || '')
-    params.append('subject', 'Don financier — virement')
+    params.append('subject', copy.gasSubjectWire)
     params.append('message', body || '—')
     setDonationWireBusy(true)
-    setDonationWireStatus('Envoi…')
+    setDonationWireStatus(copy.formStatusSending)
     try {
       await submitToGas('contact', params)
       form.reset()
-      setDonationWireStatus('Notification envoyée ✅')
+      setDonationWireStatus(copy.formStatusWireSuccess)
     } catch {
       setDonationWireStatus(copy.formErrorSend)
     } finally {
@@ -1461,12 +1486,23 @@ export default function App() {
       {/* Image V2 : calque fixed plein écran (recouvert au scroll par le fond des sections suivantes). */}
       <HeroFixedBackground src={paths.heroBackground} />
 
+      {/* Encart langue : navigateur non-FR + site en français (voir LocaleSuggestBanner). */}
+      <div className="fixed left-0 right-0 top-0 z-[45]">
+        <LocaleSuggestBanner onVisibilityChange={setLangBannerVisible} />
+      </div>
+
       {/* Header fixe au-dessus du hero — reste visible pendant tout le défilement. */}
-      <header className="fixed top-4 left-0 right-0 z-40 px-4 md:px-8 lg:px-10">
-        <div
-          className="mx-auto flex max-w-7xl items-center justify-between gap-3 rounded-full border px-4 py-3 md:px-6"
-          style={headerSurfaceStyle}
-        >
+      <header
+        className={cn(
+          'fixed left-0 right-0 z-50 px-4 md:px-8 lg:px-10 transition-[top] duration-200',
+          langBannerVisible ? 'top-[4.25rem] sm:top-[3.75rem]' : 'top-4'
+        )}
+      >
+        <div className="relative mx-auto max-w-7xl">
+          <div
+            className="flex items-center justify-between gap-3 rounded-full border px-4 py-3 md:px-6"
+            style={headerSurfaceStyle}
+          >
           <a href="#top" className="flex min-w-0 flex-1 items-center gap-3 text-left lg:flex-none">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-emerald-400/15 ring-1 ring-emerald-300/20">
               {!logoFailed ? (
@@ -1505,7 +1541,7 @@ export default function App() {
             style={headerMobileBtnStyle}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"
-            aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+            aria-label={mobileMenuOpen ? copy.aria.closeMenu : copy.aria.openMenu}
             onClick={() => setMobileMenuOpen((o) => !o)}
           >
             {mobileMenuOpen ? <X className="h-5 w-5" strokeWidth={2} /> : <Menu className="h-5 w-5" strokeWidth={2} />}
@@ -1513,9 +1549,9 @@ export default function App() {
 
           <nav
             className="hidden flex-wrap items-center gap-2 text-sm lg:flex"
-            aria-label="Principal"
+            aria-label={copy.aria.mainNav}
           >
-            {NAV_LINKS.map((item) => {
+            {copy.navLinks.map((item) => {
               const isActive = activeNavId === item.href.slice(1)
               return (
                 <a
@@ -1534,63 +1570,78 @@ export default function App() {
                 </a>
               )
             })}
+            <LocaleSwitch className="shrink-0" buttonStyle={getHeaderNavLinkStyle(false)} />
             <Button
               className="px-4 py-2"
               onClick={() => setDonationModalOpen(true)}
             >
-              Faire un don
+              {copy.ctaDonate}
             </Button>
           </nav>
+          </div>
+
+          {/* Menu mobile : hauteur au contenu, ancré sous la barre du header (pas de scroll interne). */}
+          {mobileMenuOpen ? (
+            <nav
+              id="mobile-menu"
+              className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-10 rounded-2xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-300/40 lg:hidden"
+              aria-label={copy.aria.mobileNav}
+            >
+              <ul className="flex flex-col gap-0.5">
+                {copy.navLinks.map((item) => {
+                  const isActive = activeNavId === item.href.slice(1)
+                  return (
+                    <li key={item.href}>
+                      <a
+                        href={item.href}
+                        aria-current={isActive ? 'true' : undefined}
+                        className={cn(
+                          'block rounded-xl px-3 py-2.5 text-base transition',
+                          isActive
+                            ? 'bg-emerald-50 font-semibold text-emerald-700'
+                            : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900'
+                        )}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.label}
+                      </a>
+                    </li>
+                  )
+                })}
+              </ul>
+              <div className="mt-3 flex flex-col gap-2 border-t border-slate-100 pt-3">
+                <LocaleSwitch className="w-fit" />
+                <a
+                  href="#don"
+                  className="flex w-full items-center justify-center rounded-full bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    setMobileMenuOpen(false)
+                    setDonationModalOpen(true)
+                  }}
+                >
+                  {copy.ctaDonate}
+                </a>
+              </div>
+            </nav>
+          ) : null}
         </div>
       </header>
 
+      {/* Voile mobile : sous le header (z-40) pour garder le panneau menu cliquable au-dessus. */}
       {mobileMenuOpen ? (
-        <div className="fixed inset-0 z-[100] lg:hidden" role="dialog" aria-modal="true" aria-label="Menu de navigation">
+        <div
+          className="fixed inset-0 z-[35] lg:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label={copy.aria.mobileNavDialog}
+        >
           <button
             type="button"
             className="absolute inset-0 bg-black/65 backdrop-blur-sm"
-            aria-label="Fermer le menu"
+            aria-label={copy.aria.closeMenu}
             onClick={() => setMobileMenuOpen(false)}
           />
-          <nav
-            id="mobile-menu"
-            className="absolute left-3 right-3 top-[4.5rem] max-h-[min(calc(100dvh-6rem),32rem)] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl shadow-slate-300/40 sm:left-4 sm:right-4"
-            aria-label="Navigation mobile"
-          >
-            <ul className="flex flex-col gap-1">
-              {NAV_LINKS.map((item) => {
-                const isActive = activeNavId === item.href.slice(1)
-                return (
-                  <li key={item.href}>
-                    <a
-                      href={item.href}
-                      aria-current={isActive ? 'true' : undefined}
-                      className={cn(
-                        'block border-b border-slate-100 px-4 py-3 text-base transition last:border-b-0',
-                        isActive
-                          ? 'font-semibold text-emerald-700 underline decoration-2 underline-offset-4'
-                          : 'text-slate-700 hover:text-slate-900'
-                      )}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {item.label}
-                    </a>
-                  </li>
-                )
-              })}
-            </ul>
-            <a
-              href="#don"
-              className="mt-4 flex w-full items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
-              onClick={(e) => {
-                e.preventDefault()
-                setMobileMenuOpen(false)
-                setDonationModalOpen(true)
-              }}
-            >
-              Faire un don
-            </a>
-          </nav>
         </div>
       ) : null}
 
@@ -1599,7 +1650,7 @@ export default function App() {
         ref={heroSectionRef}
         id="top"
         className="relative z-10 flex min-h-[100dvh] min-h-[100svh] min-h-screen flex-col"
-        aria-label="Accueil"
+        aria-label={copy.aria.home}
       >
         {/* Voile sombre local (défile avec la section) pour lisibilité du texte. */}
         <div
@@ -1623,7 +1674,7 @@ export default function App() {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Button className="hero-v2-btn-shadow px-6" onClick={() => setDonationModalOpen(true)}>
-              Faire un don <ArrowRight className="ml-2 h-4 w-4" />
+              {copy.ctaDonate} <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button
               variant="outline"
@@ -1641,7 +1692,7 @@ export default function App() {
       <div className="relative z-10 overflow-x-clip bg-site">
         <main>
           <div className="relative mx-auto max-w-7xl px-4 py-6 md:px-8 lg:px-10">
-            <section className="mt-0 grid gap-6 lg:grid-cols-3" id="valeurs" aria-label="Valeurs">
+            <section className="mt-0 grid gap-6 lg:grid-cols-3" id="valeurs" aria-label={copy.aria.values}>
             {values.map((item) => {
               const Icon = item.icon
               return (
@@ -1799,7 +1850,7 @@ export default function App() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Comment ça fonctionne ?</CardTitle>
+                <CardTitle>{copy.donateHowTitle}</CardTitle>
               </CardHeader>
               <CardContent>
                 <AccordionItem
@@ -1841,20 +1892,11 @@ export default function App() {
                     </CardIconBox>
                     <p className="text-sm font-semibold text-slate-900">{copy.creationsOrderTitle}</p>
                     <p className="mt-2 text-sm leading-7 text-slate-600">{copy.creationsOrderHtml}</p>
-                    <a
-                      href={legacyPage('boutique.html')}
-                      className="mt-3 inline-block text-sm font-medium text-emerald-600 underline hover:text-emerald-700"
-                    >
-                      {copy.creationsBtnShop} →
-                    </a>
                   </CardContent>
                 </Card>
                 <div className="flex flex-wrap gap-3">
-                  <Button href={legacyPage('boutique.html')}>
-                    <ShoppingBag className="mr-2 h-4 w-4" /> {copy.creationsBtnShop}
-                  </Button>
                   <Button variant="outline" onClick={() => setContactModalOpen(true)}>
-                    Commander via le contact
+                    {copy.creationsOrderContactBtn}
                   </Button>
                 </div>
               </div>
@@ -1865,7 +1907,7 @@ export default function App() {
                 !SHOP_OPEN && 'pointer-events-none select-none blur-[3px] opacity-[0.82]'
               )}
             >
-              <SiteImage src={paths.creations} alt="Créations des enfants" tall />
+              <SiteImage src={paths.creations} alt={copy.creationsImageAlt} tall />
             </div>
             {!SHOP_OPEN ? (
               <div
@@ -1887,11 +1929,11 @@ export default function App() {
             <SectionTitle
               eyebrow={copy.galleryEyebrow}
               title={copy.galleryTitle}
-              text={albumBlurb(activeTab)}
+              text={albumBlurb(activeTab, copy)}
             />
             <div className="mt-8 rounded-[28px] border border-slate-200 bg-white p-3 shadow-sm">
-              <div className="flex flex-wrap gap-2" role="tablist" aria-label="Albums">
-                {GALLERY_TABS.map(({ key, label }) => (
+              <div className="flex flex-wrap gap-2" role="tablist" aria-label={copy.aria.galleryAlbums}>
+                {copy.galleryTabs.map(({ key, label }) => (
                   <button
                     type="button"
                     key={key}
@@ -1908,14 +1950,14 @@ export default function App() {
                 ))}
               </div>
               {galleryImages.length === 0 ? (
-                <p className="mt-6 px-2 text-sm text-slate-500">Aucun média dans cet album pour le moment.</p>
+                <p className="mt-6 px-2 text-sm text-slate-500">{copy.galleryEmpty}</p>
               ) : (
                 <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
                   {galleryImages.map((img, idx) => (
                     <GalleryThumb
                       key={`${img.src}-${idx}`}
                       src={img.src}
-                      alt={img.alt || 'Galerie'}
+                      alt={img.alt || copy.aria.galleryMedia}
                       type={img.type === 'video' ? 'video' : 'image'}
                       onPick={() => setGalleryLightboxIndex(idx)}
                     />
@@ -1936,7 +1978,7 @@ export default function App() {
             <div
               className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
               role="list"
-              aria-label="Liste des donateurs"
+              aria-label={copy.aria.donorsList}
             >
               {DONORS_DEMO.map((row, i) => {
                 const isFin = row.type === 'financial'
@@ -2005,6 +2047,12 @@ export default function App() {
             >
               {copy.footerLegal}
             </button>
+            <p className="footer-moriarty-credit mt-3 text-slate-500">
+              {copy.footerSiteBy}{' '}
+              <a href="#" data-moriarty-vcard className="moriarty-vcard-name">
+                Moriarty
+              </a>
+            </p>
           </footer>
           </div>
         </main>
@@ -2023,6 +2071,12 @@ export default function App() {
 
         {/* Purpose: paiement Stripe intégré — montants suggérés, montant libre, Payment Element. */}
         <section className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-5">
+          {/* Purpose: rassurer sur la confidentialité — aucune donnée bancaire côté association. */}
+          <div className="mb-4 flex gap-3 rounded-xl border border-emerald-300/50 bg-white/90 px-4 py-3">
+            <Shield className={cn('mt-0.5 h-5 w-5 shrink-0', cardIconClass('emerald'))} aria-hidden />
+            <p className="text-sm leading-6 text-slate-600">{copy.donateFinModalStripeSecurity}</p>
+          </div>
+
           <h3 className="flex items-center gap-2 text-base font-semibold text-slate-900">
             <CircleDollarSign className={cn('h-5 w-5', cardIconClass('emerald'))} />
             {copy.donateFinModalStripeTitle}
@@ -2049,21 +2103,21 @@ export default function App() {
           {bankIbanConfigured ? (
             <dl className="mt-4 space-y-2 rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-700">
               <div>
-                <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Bénéficiaire</dt>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">{copy.wireBeneficiary}</dt>
                 <dd className="mt-0.5 font-medium text-slate-900">{DONATION_BANK_DETAILS.beneficiary}</dd>
               </div>
               <div>
-                <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">IBAN</dt>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">{copy.wireIban}</dt>
                 <dd className="mt-0.5 font-mono text-sm">{DONATION_BANK_DETAILS.iban}</dd>
               </div>
               {DONATION_BANK_DETAILS.bic ? (
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">BIC</dt>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">{copy.wireBic}</dt>
                   <dd className="mt-0.5 font-mono text-sm">{DONATION_BANK_DETAILS.bic}</dd>
                 </div>
               ) : null}
               <div>
-                <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">Référence</dt>
+                <dt className="text-xs font-semibold uppercase tracking-wide text-slate-500">{copy.wireReference}</dt>
                 <dd className="mt-0.5">{DONATION_BANK_DETAILS.reference}</dd>
               </div>
             </dl>
@@ -2076,30 +2130,30 @@ export default function App() {
             <p className="mt-1 text-sm text-slate-500">{copy.donateFinModalWireNotifyText}</p>
             <form className="mt-4 grid gap-4 md:grid-cols-2" onSubmit={onDonationWireSubmit}>
               <label className={labelClass}>
-                Nom
-                <input className={inputClass} name="name" required placeholder="Ex : Marie Dupont" />
+                {copy.formLabelName}
+                <input className={inputClass} name="name" required placeholder={copy.placeholderName} />
               </label>
               <label className={labelClass}>
-                Email
+                {copy.formLabelEmail}
                 <input
                   className={inputClass}
                   type="email"
                   name="email"
                   required
-                  placeholder="ex : marie@mail.com"
+                  placeholder={copy.placeholderEmail}
                 />
               </label>
               <label className={labelClass}>
-                Montant (facultatif)
-                <input className={inputClass} name="amount" placeholder="Ex : 50 €" />
+                {copy.formLabelAmountOptional}
+                <input className={inputClass} name="amount" placeholder={copy.placeholderAmount} />
               </label>
               <label className={`${labelClass} md:col-span-2`}>
-                Message (facultatif)
+                {copy.formLabelMessageOptional}
                 <textarea
                   className={cn(inputClass, 'min-h-[100px] resize-y')}
                   name="message"
                   rows={3}
-                  placeholder="Date du virement, précisions…"
+                  placeholder={copy.placeholderWireMessage}
                 />
               </label>
               <div className="flex flex-wrap items-center gap-4 md:col-span-2">
@@ -2139,73 +2193,73 @@ export default function App() {
         {/* Don matériel : champs texte pour objet / instrument (GAS : item, instrument) ; état inclut Neuf/ve. */}
         <form className="grid gap-4 md:grid-cols-2" onSubmit={onMaterialSubmit}>
           <label className={labelClass}>
-            Nom
-            <input className={inputClass} name="name" required placeholder="Ex : Marie Dupont" />
+            {copy.formLabelName}
+            <input className={inputClass} name="name" required placeholder={copy.placeholderName} />
           </label>
           <label className={labelClass}>
-            Email
+            {copy.formLabelEmail}
             <input
               className={inputClass}
               type="email"
               name="email"
               required
-              placeholder="ex : marie@mail.com"
+              placeholder={copy.placeholderEmail}
             />
           </label>
 
           <label className={labelClass}>
-            Objet du don
+            {copy.formLabelDonItem}
             <input
               className={inputClass}
               name="item"
               required
-              placeholder="Ex : instruments, partitions, pupitres, accessoires…"
+              placeholder={copy.placeholderMatItem}
             />
           </label>
           <label className={labelClass}>
-            Instrument (si concerné)
+            {copy.formLabelInstrument}
             <input
               className={inputClass}
               name="instrument"
-              placeholder="Ex : trombone, tuba, trompette…"
+              placeholder={copy.placeholderMatInstrument}
             />
           </label>
 
           <label className={labelClass}>
-            Marque
-            <input className={inputClass} name="brand" placeholder="Ex : Yamaha, Bach…" />
+            {copy.formLabelBrand}
+            <input className={inputClass} name="brand" placeholder={copy.placeholderMatBrand} />
           </label>
           <label className={labelClass}>
-            Numéro de série
-            <input className={inputClass} name="serial" placeholder="Ex : SN123456" />
+            {copy.formLabelSerial}
+            <input className={inputClass} name="serial" placeholder={copy.placeholderMatSerial} />
           </label>
 
           <label className={labelClass}>
-            Quantité
+            {copy.formLabelQuantity}
             <input className={inputClass} type="number" min="1" name="qty" placeholder="1" />
           </label>
           <label className={labelClass}>
-            État du matériel
+            {copy.formLabelCondition}
             <select className={inputClass} name="condition" required defaultValue="">
               <option value="" disabled>
-                Choisir…
+                {copy.formSelectChoose}
               </option>
-              <option value="neuf_ve">Neuf/ve</option>
-              <option value="excellent">Excellent</option>
-              <option value="tres_bon">Très bon</option>
-              <option value="bon">Bon</option>
-              <option value="correct">Correct</option>
-              <option value="a_reparer">À réparer</option>
+              <option value="neuf_ve">{copy.matConditionNeuf}</option>
+              <option value="excellent">{copy.matConditionExcellent}</option>
+              <option value="tres_bon">{copy.matConditionTresBon}</option>
+              <option value="bon">{copy.matConditionBon}</option>
+              <option value="correct">{copy.matConditionCorrect}</option>
+              <option value="a_reparer">{copy.matConditionAReparer}</option>
             </select>
           </label>
 
           <label className={`${labelClass} md:col-span-2`}>
-            Ville / Pays
-            <input className={inputClass} name="location" placeholder="Ex : Nice, France" />
+            {copy.formLabelLocation}
+            <input className={inputClass} name="location" placeholder={copy.placeholderMatLocation} />
           </label>
 
           <label className={`${labelClass} md:col-span-2`}>
-            Message
+            {copy.formLabelMessage}
             <textarea
               className={cn(inputClass, 'min-h-[140px] resize-y')}
               name="message"
@@ -2237,30 +2291,30 @@ export default function App() {
         {/* Champs name, email, subject, message → submitToGas('contact'). */}
         <form className="grid gap-4 md:grid-cols-2" onSubmit={onContactSubmit}>
           <label className={labelClass}>
-            Nom
-            <input className={inputClass} name="name" required placeholder="Ex : Marie Dupont" />
+            {copy.formLabelName}
+            <input className={inputClass} name="name" required placeholder={copy.placeholderName} />
           </label>
           <label className={labelClass}>
-            Email
+            {copy.formLabelEmail}
             <input
               className={inputClass}
               type="email"
               name="email"
               required
-              placeholder="ex : marie@mail.com"
+              placeholder={copy.placeholderEmail}
             />
           </label>
           <label className={`${labelClass} md:col-span-2`}>
-            Sujet
+            {copy.formLabelSubject}
             <input
               className={inputClass}
               name="subject"
               required
-              placeholder="Ex : Question / partenariat…"
+              placeholder={copy.placeholderContactSubject}
             />
           </label>
           <label className={`${labelClass} md:col-span-2`}>
-            Message
+            {copy.formLabelMessage}
             <textarea
               className={cn(inputClass, 'min-h-[160px] resize-y')}
               name="message"

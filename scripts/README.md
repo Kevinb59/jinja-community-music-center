@@ -82,7 +82,7 @@ npm run build
 
 ## 📝 Format du fichier généré
 
-Le script écrit **`src/data/gallery-data.json`** (application React) et une copie **`public/js/gallery-data.json`** pour les pages statiques qui chargent encore `js/script.js`. Structure :
+Le script écrit **`src/data/gallery-data.json`** (application React). Structure :
 
 ```json
 {

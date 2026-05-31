@@ -50,11 +50,10 @@ const MIME = {
 
 /**
  * En développement : sert le dossier `images/` à la racine du dépôt sous `/images/`.
- * Les pages HTML legacy (boutique, etc.) sont dans `public/` et servies par Vite par défaut.
  */
-function legacyDevAssets() {
+function devSiteImages() {
   return {
-    name: 'legacy-dev-assets',
+    name: 'dev-site-images',
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
         if (req.method !== 'GET') return next()
@@ -154,5 +153,5 @@ function stripeDevApi(mode) {
 
 export default defineConfig(({ mode }) => ({
   define: gasEnvDefine(mode),
-  plugins: [react(), legacyDevAssets(), copySiteImagesToDist(), stripeDevApi(mode)]
+  plugins: [react(), devSiteImages(), copySiteImagesToDist(), stripeDevApi(mode)]
 }))

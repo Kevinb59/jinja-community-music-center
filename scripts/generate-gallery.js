@@ -33,14 +33,6 @@ const ALBUM_MAPPING = {
 const IMAGES_DIR = path.join(__dirname, '..', 'images')
 // Fichier de sortie JSON (consommé par l’app React dans src/)
 const OUTPUT_FILE = path.join(__dirname, '..', 'src', 'data', 'gallery-data.json')
-// Copie pour les pages dans `public/` qui chargent encore `js/script.js` (fetch relatif `js/gallery-data.json`).
-const PUBLIC_GALLERY_COPY = path.join(
-  __dirname,
-  '..',
-  'public',
-  'js',
-  'gallery-data.json'
-)
 
 const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp']
 const VIDEO_EXTENSIONS = ['.mp4', '.webm', '.ogg']
@@ -116,14 +108,11 @@ function generateGalleryData() {
     }
   }
 
-  // Écrire le fichier JSON (React + copie public pour le JS legacy des pages statiques)
+  // Écrire le fichier JSON pour l’application React
   const payload = JSON.stringify(galleryData, null, 2)
   try {
     fs.writeFileSync(OUTPUT_FILE, payload, 'utf8')
-    fs.mkdirSync(path.dirname(PUBLIC_GALLERY_COPY), { recursive: true })
-    fs.writeFileSync(PUBLIC_GALLERY_COPY, payload, 'utf8')
     console.log(`\n✅ Fichier généré: ${OUTPUT_FILE}`)
-    console.log(`✅ Copie public: ${PUBLIC_GALLERY_COPY}`)
     console.log(
       `📊 Total de médias: ${Object.values(galleryData).reduce(
         (sum, arr) => sum + arr.length,

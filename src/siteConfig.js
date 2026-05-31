@@ -1,19 +1,16 @@
 /**
- * URLs et constantes alignées sur le site statique (public/js/config.js pour les pages legacy).
+ * URLs et constantes du site React (Vite).
  * Priorité : GAS_URL_CONTACT / GAS_URL_MATERIAL (injectées au build, voir vite.config.js),
  * puis les équivalents VITE_* pour compatibilité.
  */
 export const BRAND_NAME = "PROJET JINJA COMMUNITY MUSIC CENTER - FRANCE"
-
-export const DONATION_PAGE_URL =
-  import.meta.env.VITE_DONATION_URL ?? 'https://example.com/donation'
 
 /** Clé publique Stripe (Payment Element dans la modale don). */
 export const STRIPE_PUBLISHABLE_KEY =
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? ''
 
 /** Montants suggérés (€) dans la modale don. */
-export const DONATION_SUGGESTED_AMOUNTS = [25, 50, 100]
+export const DONATION_SUGGESTED_AMOUNTS = [10, 25, 50, 100]
 
 /** Coordonnées bancaires (virement) — renseigner via VITE_DONATION_IBAN / VITE_DONATION_BIC. */
 export const DONATION_BANK_DETAILS = {
@@ -41,13 +38,8 @@ export const GAS_MATERIAL_URL =
   import.meta.env.VITE_GAS_MATERIAL_URL ||
   GAS_CONTACT_URL
 
-/** Pages HTML encore en fichiers statiques : servies depuis `public/` à la racine de l’URL. */
-export function legacyPage(fileName) {
-  return `/${fileName}`
-}
-
 /**
- * Boutique en ligne (page boutique + CTA section « Nos créations »).
- * Mettre à `true` quand la boutique est ouverte ; `false` affiche la zone en flou + banderole.
+ * Boutique en ligne (section « Nos créations »).
+ * Mettre à `true` quand la page boutique React sera prête ; `false` affiche la zone en flou + banderole.
  */
 export const SHOP_OPEN = false

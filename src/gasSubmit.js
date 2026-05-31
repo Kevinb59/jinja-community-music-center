@@ -1,7 +1,7 @@
 import { GAS_CONTACT_URL, GAS_MATERIAL_URL } from './siteConfig'
 
 /**
- * Envoie les données vers Google Apps Script (GET + no-cors), comme sur script.js.
+ * Envoie les données vers Google Apps Script (GET + no-cors).
  * @param {'contact'|'material'} formType
  * @param {URLSearchParams} params
  */

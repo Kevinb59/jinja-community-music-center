@@ -5,7 +5,7 @@ import React, { useMemo, useState } from 'react'
 import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import { notifyStripeDonation } from './gasSubmit'
-import { copy } from './siteCopy'
+import { useCopy } from './i18n/LocaleContext.jsx'
 import { DONATION_SUGGESTED_AMOUNTS, isStripePaymentConfigured, STRIPE_PUBLISHABLE_KEY } from './siteConfig'
 
 function cn(...classes) {
@@ -21,6 +21,7 @@ function eurosToCents(value) {
 }
 
 function PaymentStep({ onSuccess, onBack, busy, setBusy, setError }) {
+  const copy = useCopy()
   const stripe = useStripe()
   const elements = useElements()
 
@@ -77,6 +78,7 @@ function PaymentStep({ onSuccess, onBack, busy, setBusy, setError }) {
 }
 
 export default function DonationStripeForm({ inputClass, labelClass }) {
+  const copy = useCopy()
   const stripeReady = isStripePaymentConfigured() && Boolean(stripePromise)
   const [selectedPreset, setSelectedPreset] = useState(null)
   const [customAmount, setCustomAmount] = useState('')
@@ -229,7 +231,7 @@ export default function DonationStripeForm({ inputClass, labelClass }) {
             min="1"
             step="0.01"
             inputMode="decimal"
-            placeholder="Ex : 75"
+            placeholder={copy.placeholderStripeAmount}
             value={customAmount}
             onChange={(e) => {
               setCustomAmount(e.target.value)
@@ -246,18 +248,18 @@ export default function DonationStripeForm({ inputClass, labelClass }) {
             className={inputClass}
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Ex : Marie Dupont"
+            placeholder={copy.placeholderName}
           />
         </label>
         <label className={labelClass}>
-          Email
+          {copy.donateStripeEmailLabel}
           <input
             className={inputClass}
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="ex : marie@mail.com"
+            placeholder={copy.placeholderEmail}
           />
         </label>
       </div>
