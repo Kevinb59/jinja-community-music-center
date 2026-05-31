@@ -1173,7 +1173,18 @@ export default function App() {
   /** Index de la photo ouverte en plein écran dans l’album courant ; null si fermé. */
   const [galleryLightboxIndex, setGalleryLightboxIndex] = useState(null)
   /** Encart « passer en anglais » : décale le header fixe quand visible. */
-  const [langBannerVisible, setLangBannerVisible] = useState(false)
+  const [langBannerMetrics, setLangBannerMetrics] = useState({ visible: false, height: 0 })
+  /** Décalage header sous la bannière : hauteur mesurée + 1rem (équivalent top-4). */
+  const headerTopPx = langBannerMetrics.visible ? langBannerMetrics.height + 16 : 16
+
+  // Purpose: ajuster le scroll des ancres quand la bannière langue est affichée (hauteur variable).
+  useEffect(() => {
+    const offset = langBannerMetrics.visible ? `${langBannerMetrics.height}px` : '0px'
+    document.documentElement.style.setProperty('--lang-banner-offset', offset)
+    return () => {
+      document.documentElement.style.removeProperty('--lang-banner-offset')
+    }
+  }, [langBannerMetrics.visible, langBannerMetrics.height])
 
   // Changer d’album ferme le lightbox pour éviter un index hors plage.
   useEffect(() => {
@@ -1486,17 +1497,15 @@ export default function App() {
       {/* Image V2 : calque fixed plein écran (recouvert au scroll par le fond des sections suivantes). */}
       <HeroFixedBackground src={paths.heroBackground} />
 
-      {/* Encart langue : navigateur non-FR + site en français (voir LocaleSuggestBanner). */}
-      <div className="fixed left-0 right-0 top-0 z-[45]">
-        <LocaleSuggestBanner onVisibilityChange={setLangBannerVisible} />
+      {/* Encart langue : z-index au-dessus du header ; hauteur mesurée pour éviter chevauchement. */}
+      <div className="fixed left-0 right-0 top-0 z-[60]">
+        <LocaleSuggestBanner onMetricsChange={setLangBannerMetrics} />
       </div>
 
-      {/* Header fixe au-dessus du hero — reste visible pendant tout le défilement. */}
+      {/* Header fixe — toujours sous la bannière (top dynamique). */}
       <header
-        className={cn(
-          'fixed left-0 right-0 z-50 px-4 md:px-8 lg:px-10 transition-[top] duration-200',
-          langBannerVisible ? 'top-[4.25rem] sm:top-[3.75rem]' : 'top-4'
-        )}
+        className="fixed left-0 right-0 z-50 px-4 transition-[top] duration-200 md:px-8 lg:px-10"
+        style={{ top: headerTopPx }}
       >
         <div className="relative mx-auto max-w-7xl">
           <div

@@ -1,7 +1,7 @@
 /**
  * Encart bidirectionnel : propose EN si site FR + navigateur non-FR ; propose FR si site EN + navigateur FR.
  */
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { X } from 'lucide-react'
 import { useLocale } from '../i18n/LocaleContext.jsx'
 import {
@@ -33,9 +33,10 @@ const SUGGEST_FR_UI = {
   closeLabel: 'Fermer la suggestion de langue'
 }
 
-export default function LocaleSuggestBanner({ onVisibilityChange }) {
+export default function LocaleSuggestBanner({ onMetricsChange }) {
   const { locale, setLocale } = useLocale()
   const [mode, setMode] = useState(null)
+  const rootRef = useRef(null)
 
   // Purpose: recalculer l’encart à chaque changement de locale.
   useEffect(() => {
@@ -44,9 +45,28 @@ export default function LocaleSuggestBanner({ onVisibilityChange }) {
 
   const visible = mode !== null
 
+  // Purpose: remonter hauteur réelle (lignes multiples) pour positionner le header en dessous.
   useEffect(() => {
-    onVisibilityChange?.(visible)
-  }, [visible, onVisibilityChange])
+    if (!visible) {
+      onMetricsChange?.({ visible: false, height: 0 })
+      return
+    }
+    const el = rootRef.current
+    if (!el) return
+
+    const report = () => {
+      onMetricsChange?.({ visible: true, height: el.getBoundingClientRect().height })
+    }
+
+    report()
+    const observer = new ResizeObserver(report)
+    observer.observe(el)
+    window.addEventListener('resize', report)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', report)
+    }
+  }, [visible, onMetricsChange])
 
   if (!visible) return null
 
@@ -73,9 +93,10 @@ export default function LocaleSuggestBanner({ onVisibilityChange }) {
 
   return (
     <div
+      ref={rootRef}
       role="region"
       aria-label={ui.regionLabel}
-      className="border-b border-emerald-200/80 bg-emerald-50/95 text-slate-800 shadow-sm backdrop-blur-sm"
+      className="relative z-[1] border-b border-emerald-200/80 bg-emerald-50/95 text-slate-800 shadow-sm backdrop-blur-sm"
     >
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 px-4 py-2.5 sm:justify-between sm:px-6 md:px-8 lg:px-10">
         <p className="text-center text-sm leading-snug sm:text-left">{ui.message}</p>
