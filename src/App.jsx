@@ -704,6 +704,7 @@ function ProjectImageTile({
   imageAlts = [],
   focusImageTop = false,
   carousel = false,
+  isActive = true,
   onExpandedChange
 }) {
   const [expanded, setExpanded] = useState(false)
@@ -719,6 +720,14 @@ function ProjectImageTile({
     },
     [onExpandedChange]
   )
+
+  // Purpose: tuile hors écran → replier le panneau (le rail garde les tuiles montées).
+  useEffect(() => {
+    if (carousel && !isActive && expanded) {
+      setExpanded(false)
+      onExpandedChange?.(false)
+    }
+  }, [carousel, isActive, expanded, onExpandedChange])
 
   useEffect(() => {
     if (!expanded) return
@@ -876,14 +885,24 @@ function buildProjectTiles() {
 }
 
 /**
- * Carrousel des tuiles « Le projet » : une tuile visible, flèches + pastilles.
- * Variables : activeIndex (slide courante), tiles (liste des 6 contenus).
+ * Carrousel des tuiles « Le projet » : rail horizontal, défilement fluide, flèches + pastilles.
+ * Variables : activeIndex (slide courante), tiles (liste des 6 contenus), reduceMotion (accessibilité).
  */
 function ProjectTilesCarousel() {
   const tiles = useMemo(() => buildProjectTiles(), [])
   const [activeIndex, setActiveIndex] = useState(0)
   const [isTileExpanded, setIsTileExpanded] = useState(false)
+  const [reduceMotion, setReduceMotion] = useState(false)
   const total = tiles.length
+
+  // Purpose: respecter prefers-reduced-motion pour désactiver l’animation de glissement.
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReduceMotion(mq.matches)
+    const onChange = () => setReduceMotion(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   // Purpose: index circulaire pour précédent / suivant.
   const goTo = useCallback(
@@ -901,29 +920,42 @@ function ProjectTilesCarousel() {
   // Purpose: défilement automatique toutes les 3 s tant qu'aucun panneau n'est ouvert.
   useEffect(() => {
     if (isTileExpanded) return
-    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      return
-    }
+    if (reduceMotion) return
 
     const timer = window.setInterval(() => {
       goTo(activeIndex + 1)
     }, 3000)
 
     return () => window.clearInterval(timer)
-  }, [activeIndex, goTo, isTileExpanded])
-
-  const slide = tiles[activeIndex]
+  }, [activeIndex, goTo, isTileExpanded, reduceMotion])
 
   return (
     <div className="relative mt-10" aria-roledescription="carousel" aria-label="Le projet — diapositives">
-      {/* Tuile centrée, largeur proche d'une colonne de l'ancienne grille (pas pleine largeur). */}
-      <div className="relative mx-auto max-w-sm sm:max-w-md md:max-w-xl lg:max-w-2xl">
-        <ProjectImageTile
-          key={activeIndex}
-          carousel
-          onExpandedChange={setIsTileExpanded}
-          {...slide}
-        />
+      {/* Purpose: overflow hidden + rail translateX = effet de défilement horizontal entre cartes. */}
+      <div className="relative mx-auto max-w-sm overflow-hidden sm:max-w-md md:max-w-xl lg:max-w-2xl">
+        <div
+          className={cn(
+            'flex will-change-transform',
+            !reduceMotion && 'transition-transform duration-500 ease-out motion-reduce:transition-none'
+          )}
+          style={{ transform: `translate3d(-${activeIndex * 100}%, 0, 0)` }}
+        >
+          {tiles.map((tile, i) => (
+            <div
+              key={tile.id || tile.title}
+              className="w-full shrink-0 px-0"
+              aria-hidden={i !== activeIndex}
+              inert={i !== activeIndex ? '' : undefined}
+            >
+              <ProjectImageTile
+                carousel
+                isActive={i === activeIndex}
+                onExpandedChange={i === activeIndex ? setIsTileExpanded : undefined}
+                {...tile}
+              />
+            </div>
+          ))}
+        </div>
 
         <button
           type="button"
@@ -1841,8 +1873,9 @@ export default function App() {
                 style={{ top: 'clamp(10.5rem, 32vw, 17rem)' }}
                 aria-hidden="true"
               >
-                <p className="max-w-md text-center rounded-full border border-slate-200 bg-white/95 px-6 py-3 text-sm font-semibold text-slate-800 shadow-lg shadow-slate-300/40 backdrop-blur-sm">
-                  {copy.shopClosedBanner}
+                <p className="max-w-xl text-center rounded-2xl border border-slate-200 bg-white/95 px-5 py-4 text-sm leading-7 text-slate-700 shadow-lg shadow-slate-300/40 backdrop-blur-sm">
+                  <strong className="block font-semibold text-slate-900">{copy.shopClosedBannerLead}</strong>
+                  <span className="mt-2 block">{copy.shopClosedBanner}</span>
                 </p>
               </div>
             ) : null}

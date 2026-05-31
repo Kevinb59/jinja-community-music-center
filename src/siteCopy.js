@@ -166,8 +166,10 @@ export const copy = {
   creationsText:
     "Les enfants du centre participent à des ateliers créatifs où ils fabriquent des objets faits main. Ces créations artisanales utilisent des matières premières locales et naturelles : fibre de bananiers, feuilles de bananier, et cordes en sisal. Les ventes soutiennent le projet associatif et le fonctionnement du centre.",
   creationsBtnShop: 'Voir la boutique',
-  /** Affiché en surimpression lorsque la boutique est fermée (voir SHOP_OPEN dans siteConfig.js). */
-  shopClosedBanner: 'Boutique fermée temporairement',
+  /** Bandeau sur la section créations lorsque SHOP_OPEN === false (siteConfig.js). */
+  shopClosedBannerLead: 'Boutique fermée pour le moment',
+  shopClosedBanner:
+    "Les créations proposées dans notre boutique sont fabriquées à la main lors d'ateliers créatifs avec les enfants du centre. Ces ateliers sont avant tout des moments de partage et d'apprentissage ; la production reste donc volontairement limitée. Chaque objet est unique et les stocks sont souvent très réduits.",
   creationsOrderTitle: 'Comment commander ?',
   creationsOrderHtml: `Rendez-vous sur notre boutique où vous pourrez voir les prix et sélectionner la quantité souhaitée. Le paiement se fait par virement bancaire sur le compte de l'association.`,
   galleryEyebrow: 'Galerie',
