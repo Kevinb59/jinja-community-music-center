@@ -25,6 +25,26 @@ function gasEnvDefine(mode) {
     )
   }
 }
+
+/**
+ * Injecte les URLs absolues og:image / og:url au build (VITE_SITE_URL ou VERCEL_URL).
+ */
+function injectSocialMeta(mode) {
+  return {
+    name: 'inject-social-meta',
+    transformIndexHtml(html) {
+      const env = loadEnv(mode, process.cwd(), '')
+      const siteUrl = (
+        env.VITE_SITE_URL ||
+        (env.VERCEL_URL ? `https://${env.VERCEL_URL}` : '')
+      ).replace(/\/$/, '')
+      const ogImage = siteUrl ? `${siteUrl}/og-image.jpg` : '/og-image.jpg'
+      const ogUrl = siteUrl ? `${siteUrl}/` : '/'
+      return html.replaceAll('__OG_IMAGE__', ogImage).replaceAll('__OG_URL__', ogUrl)
+    }
+  }
+}
+
 // Racine du dépôt : le projet Vite vit à la racine ; `images/` reste à côté de ce fichier.
 const repoRoot = __dirname
 
@@ -153,5 +173,5 @@ function stripeDevApi(mode) {
 
 export default defineConfig(({ mode }) => ({
   define: gasEnvDefine(mode),
-  plugins: [react(), devSiteImages(), copySiteImagesToDist(), stripeDevApi(mode)]
+  plugins: [react(), devSiteImages(), copySiteImagesToDist(), stripeDevApi(mode), injectSocialMeta(mode)]
 }))
