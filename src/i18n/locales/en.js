@@ -361,6 +361,7 @@ export const DONOR_COUNTRY_LABELS = {
 }
 
 export const DONORS_DEMO = [
+  { name: 'Matthew Swihart', gift: '$100', type: 'financial', date: 'May 2026', country: 'US' },
   { name: 'Martine Delmas', gift: '€100', type: 'financial', date: 'May 2026', country: 'FR' },
   { name: 'Francesco Giovacchini', gift: '$25', type: 'financial', date: 'Mar 2026', country: 'DE' },
   { name: 'Conor Chapman', gift: '$100', type: 'financial', date: 'Feb 2026', country: 'US' },
