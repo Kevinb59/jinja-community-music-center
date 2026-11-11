@@ -29,6 +29,7 @@ import { submitToGas, subscribeNewsletter } from './gasSubmit'
 import {
   BRAND_NAME,
   DONATION_BANK_DETAILS,
+  GAS_CONTACT_URL,
   SHOP_OPEN
 } from './siteConfig'
 import LocaleSuggestBanner from './components/LocaleSuggestBanner.jsx'
@@ -270,15 +271,26 @@ function ContactSection({ onOpenContact }) {
   const [newsletterBusy, setNewsletterBusy] = useState(false)
   const [newsletterStatus, setNewsletterStatus] = useState('')
   const [newsletterConsent, setNewsletterConsent] = useState(false)
+  const [newsletterSuccessOpen, setNewsletterSuccessOpen] = useState(false)
 
   // Purpose: styles de champs alignés sur les autres formulaires du site.
   const inputClass =
     'mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/30'
   const labelClass = 'block text-sm font-medium text-slate-700'
 
+  // Purpose: fermer la modale de succès avec Échap.
+  useEffect(() => {
+    if (!newsletterSuccessOpen) return undefined
+    const onKey = (ev) => {
+      if (ev.key === 'Escape') setNewsletterSuccessOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [newsletterSuccessOpen])
+
   // Purpose: inscription newsletter (GET no-cors vers GAS, comme contact / virement).
   // Variables: firstname, email, consent (obligatoire côté navigateur).
-  // Flux: validation case -> subscribeNewsletter -> message de succès ou d'erreur.
+  // Flux: validation case -> subscribeNewsletter -> modale succès (spam / courrier légitime).
   async function onNewsletterSubmit(e) {
     e.preventDefault()
     if (!newsletterConsent) {
@@ -296,7 +308,8 @@ function ContactSection({ onOpenContact }) {
       })
       form.reset()
       setNewsletterConsent(false)
-      setNewsletterStatus(copy.newsletterStatusSuccess)
+      setNewsletterStatus('')
+      setNewsletterSuccessOpen(true)
     } catch {
       setNewsletterStatus(copy.formErrorSend)
     } finally {
@@ -401,6 +414,20 @@ function ContactSection({ onOpenContact }) {
           </CardContent>
         </Card>
       </div>
+
+      {/* Purpose: après inscription — rappeler de vérifier les indésirables. */}
+      <ModalPanel
+        open={newsletterSuccessOpen}
+        onClose={() => setNewsletterSuccessOpen(false)}
+        title={copy.newsletterSuccessModalTitle}
+      >
+        <p className="text-sm leading-7 text-slate-600">{copy.newsletterSuccessModalText}</p>
+        <div className="mt-6">
+          <Button type="button" onClick={() => setNewsletterSuccessOpen(false)}>
+            {copy.newsletterSuccessModalBtn}
+          </Button>
+        </div>
+      </ModalPanel>
     </section>
   )
 }
@@ -2138,7 +2165,18 @@ export default function App() {
 
           <footer className="mt-0 pb-10 pt-4 text-center text-sm text-slate-500">
             <span className="text-slate-400">
-              © {new Date().getFullYear()} {copy.footerCopyrightEntity}
+              ©{' '}
+              {/* Purpose: accès discret à la page newsletter (année cliquable, sans style de lien). */}
+              <span
+                onClick={() => {
+                  const base = String(GAS_CONTACT_URL || '').replace(/\/$/, '')
+                  if (!base || base.includes('XXXXX')) return
+                  window.location.assign(`${base}?page=newsletter`)
+                }}
+              >
+                {new Date().getFullYear()}
+              </span>{' '}
+              {copy.footerCopyrightEntity}
             </span>
             <span className="mx-2">·</span>
             <button

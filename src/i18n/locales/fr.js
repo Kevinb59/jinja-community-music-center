@@ -183,6 +183,10 @@ export const copy = {
   newsletterSubmit: 'S’abonner',
   newsletterStatusSuccess: 'Inscription enregistrée ✅',
   newsletterStatusSending: 'Inscription…',
+  newsletterSuccessModalTitle: 'Inscription enregistrée',
+  newsletterSuccessModalText:
+    'Merci ! Un e-mail de confirmation vient de partir. Pensez à vérifier vos courriers indésirables (spam) : s’il s’y trouve, marquez-le comme courrier légitime pour bien recevoir la suite.',
+  newsletterSuccessModalBtn: 'Compris',
   placeholderNewsletterFirstName: 'Ex : Marie',
   matMessagePlaceholder: 'Décrivez brièvement votre proposition de don…',
   contactMessagePlaceholder: 'Rédigez votre message…',

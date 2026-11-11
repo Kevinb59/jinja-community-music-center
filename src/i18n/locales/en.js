@@ -182,6 +182,10 @@ export const copy = {
   newsletterSubmit: 'Subscribe',
   newsletterStatusSuccess: 'You are subscribed ✅',
   newsletterStatusSending: 'Subscribing…',
+  newsletterSuccessModalTitle: 'You are subscribed',
+  newsletterSuccessModalText:
+    'Thank you! A confirmation email is on its way. Please check your spam or junk folder: if it is there, mark it as not spam / legitimate so you keep receiving our newsletters.',
+  newsletterSuccessModalBtn: 'Got it',
   placeholderNewsletterFirstName: 'e.g. Jane',
   matMessagePlaceholder: 'Briefly describe your donation offer…',
   contactMessagePlaceholder: 'Write your message…',
