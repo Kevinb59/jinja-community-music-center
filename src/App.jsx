@@ -2186,10 +2186,11 @@ export default function App() {
             >
               {copy.footerLegal}
             </button>
-            <p className="footer-moriarty-credit mt-3 text-slate-500">
+            <p className="footer-musgraive-credit mt-3 text-slate-500">
               {copy.footerSiteBy}{' '}
-              <a href="#" data-moriarty-vcard className="moriarty-vcard-name">
-                Moriarty
+              {/* Purpose: ouvre le widget vcard hébergé sur musgraive.fr (data-musgraive-vcard). */}
+              <a href="#" data-musgraive-vcard className="musgraive-wordmark">
+                Musgr<span className="musgraive-ai">AI</span>ve
               </a>
             </p>
           </footer>

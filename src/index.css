@@ -27,20 +27,26 @@
     background-color: #faf7f2;
   }
 
-  /* Crédit pied de page Moriarty : « Site par » (police site) + nom (Engagement, +50 %). */
-  .footer-moriarty-credit .moriarty-vcard-name {
-    font-family: 'Engagement', cursive;
-    font-size: 1.5em;
+  /* Crédit pied de page MusgrAIve : Geist Black, AI doré comme sur musgraive.fr. */
+  .footer-musgraive-credit .musgraive-wordmark {
+    font-family: 'Geist', Arial, sans-serif;
+    font-size: 1.05em;
+    font-weight: 900;
     line-height: 1;
-    vertical-align: -0.06em;
-    color: rgb(5 150 105);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     text-decoration: none;
+    color: #171c20;
+    vertical-align: -0.02em;
   }
 
-  .footer-moriarty-credit .moriarty-vcard-name:hover {
-    color: rgb(4 120 87);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+  .footer-musgraive-credit .musgraive-wordmark .musgraive-ai {
+    color: #b88747;
+  }
+
+  .footer-musgraive-credit .musgraive-wordmark:hover {
+    opacity: 0.85;
+    text-decoration: none;
   }
 }
 
