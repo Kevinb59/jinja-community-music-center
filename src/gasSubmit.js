@@ -41,3 +41,17 @@ export async function notifyStripeDonation({ paymentId }) {
   })
   await submitToGas('contact', params)
 }
+
+/**
+ * Inscription newsletter (prénom, e-mail, consentement) → GAS type=newsletter_subscribe.
+ * @param {{ firstName: string, email: string }} payload
+ */
+export async function subscribeNewsletter({ firstName, email }) {
+  const params = new URLSearchParams({
+    type: 'newsletter_subscribe',
+    firstname: String(firstName || ''),
+    email: String(email || ''),
+    consent: '1'
+  })
+  await submitToGas('contact', params)
+}

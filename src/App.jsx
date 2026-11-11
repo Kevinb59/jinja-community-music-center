@@ -25,7 +25,7 @@ import {
 } from 'lucide-react'
 import galleryData from './data/gallery-data.json'
 import DonationStripeForm from './DonationStripeForm'
-import { submitToGas } from './gasSubmit'
+import { submitToGas, subscribeNewsletter } from './gasSubmit'
 import {
   BRAND_NAME,
   DONATION_BANK_DETAILS,
@@ -263,9 +263,48 @@ function HelpSection() {
 /**
  * Section « Contact » : fond fixe contact.webp pleine largeur, voile léger, carte blanche par-dessus.
  * onOpenContact : ouvre la modale formulaire.
+ * Newsletter : prénom, e-mail, case de consentement → GAS (libellé Contacts).
  */
 function ContactSection({ onOpenContact }) {
   const { copy } = useLocale()
+  const [newsletterBusy, setNewsletterBusy] = useState(false)
+  const [newsletterStatus, setNewsletterStatus] = useState('')
+  const [newsletterConsent, setNewsletterConsent] = useState(false)
+
+  // Purpose: styles de champs alignés sur les autres formulaires du site.
+  const inputClass =
+    'mt-1 w-full rounded-xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-500/50 focus:outline-none focus:ring-1 focus:ring-emerald-500/30'
+  const labelClass = 'block text-sm font-medium text-slate-700'
+
+  // Purpose: inscription newsletter (GET no-cors vers GAS, comme contact / virement).
+  // Variables: firstname, email, consent (obligatoire côté navigateur).
+  // Flux: validation case -> subscribeNewsletter -> message de succès ou d'erreur.
+  async function onNewsletterSubmit(e) {
+    e.preventDefault()
+    if (!newsletterConsent) {
+      setNewsletterStatus(copy.newsletterConsentError)
+      return
+    }
+    const form = e.target
+    const fd = new FormData(form)
+    setNewsletterBusy(true)
+    setNewsletterStatus(copy.newsletterStatusSending)
+    try {
+      await subscribeNewsletter({
+        firstName: String(fd.get('firstname') || ''),
+        email: String(fd.get('email') || '')
+      })
+      form.reset()
+      setNewsletterConsent(false)
+      setNewsletterStatus(copy.newsletterStatusSuccess)
+    } catch {
+      setNewsletterStatus(copy.formErrorSend)
+    } finally {
+      setNewsletterBusy(false)
+      setTimeout(() => setNewsletterStatus(''), 6000)
+    }
+  }
+
   return (
     <section
       id="contact"
@@ -306,6 +345,59 @@ function ContactSection({ onOpenContact }) {
             <Button className="mt-2" onClick={onOpenContact}>
               <Mail className="mr-2 h-4 w-4" /> {copy.contactFormOpenBtn}
             </Button>
+
+            {/* Purpose: abonnement newsletter dans le même encart que le contact. */}
+            <div className="border-t border-slate-200 pt-6">
+              <h3 className="text-xl font-semibold text-slate-900">{copy.newsletterTitle}</h3>
+              <p className="mt-2 text-sm leading-7 text-slate-600">{copy.newsletterLead}</p>
+              <form
+                className="mt-5 grid gap-4 sm:grid-cols-2"
+                onSubmit={onNewsletterSubmit}
+                aria-label={copy.aria.newsletterForm}
+              >
+                <label className={labelClass}>
+                  {copy.newsletterFirstNameLabel}
+                  <input
+                    className={inputClass}
+                    name="firstname"
+                    autoComplete="given-name"
+                    required
+                    placeholder={copy.placeholderNewsletterFirstName}
+                  />
+                </label>
+                <label className={labelClass}>
+                  {copy.newsletterEmailLabel}
+                  <input
+                    className={inputClass}
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    placeholder={copy.placeholderEmail}
+                  />
+                </label>
+                <label className="sm:col-span-2 flex cursor-pointer items-start gap-3 text-sm font-normal leading-6 text-slate-700">
+                  <input
+                    type="checkbox"
+                    className="mt-1 h-4 w-4 shrink-0 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500/40"
+                    checked={newsletterConsent}
+                    onChange={(ev) => setNewsletterConsent(ev.target.checked)}
+                    required
+                  />
+                  <span>{copy.newsletterConsentLabel}</span>
+                </label>
+                <div className="sm:col-span-2 flex flex-wrap items-center gap-3">
+                  <Button type="submit" disabled={newsletterBusy}>
+                    {copy.newsletterSubmit}
+                  </Button>
+                  {newsletterStatus ? (
+                    <span className="text-sm text-slate-600" role="status">
+                      {newsletterStatus}
+                    </span>
+                  ) : null}
+                </div>
+              </form>
+            </div>
           </CardContent>
         </Card>
       </div>

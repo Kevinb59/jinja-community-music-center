@@ -172,6 +172,18 @@ export const copy = {
   contactDesc:
     'Merci de nous écrire via le formulaire : chaque message est lu avec attention et une réponse vous est apportée dans les meilleurs délais.',
   contactFormOpenBtn: 'Ouvrir le formulaire de contact',
+  newsletterTitle: 'Newsletter',
+  newsletterLead:
+    'Recevez les nouvelles du centre, les concerts et le suivi des dons. Une adresse e-mail suffit.',
+  newsletterFirstNameLabel: 'Prénom',
+  newsletterEmailLabel: 'E-mail',
+  newsletterConsentLabel:
+    'J’accepte de recevoir la newsletter de Jinja Community Music Center – France.',
+  newsletterConsentError: 'Cochez la case pour vous abonner.',
+  newsletterSubmit: 'S’abonner',
+  newsletterStatusSuccess: 'Inscription enregistrée ✅',
+  newsletterStatusSending: 'Inscription…',
+  placeholderNewsletterFirstName: 'Ex : Marie',
   matMessagePlaceholder: 'Décrivez brièvement votre proposition de don…',
   contactMessagePlaceholder: 'Rédigez votre message…',
   formErrorSend: "Erreur d'envoi. Veuillez réessayer ultérieurement.",
@@ -308,6 +320,7 @@ export const copy = {
     photo: 'Photo',
     donorsList: 'Liste des donateurs',
     donorFlag: 'Pays du donateur',
+    newsletterForm: 'Inscription à la newsletter',
     localeSwitch: 'Choisir la langue',
     langBanner: 'Suggestion de langue',
     langBannerClose: 'Fermer la suggestion de langue'
